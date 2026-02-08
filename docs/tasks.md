@@ -11,14 +11,6 @@ this document tracks current tasks for the typescript-aws-dashboard project.
 
 ## Backend Tasks
 
-### 🔴 implement tenant context middleware
-
-- **assigned to**: backend lead
-- **priority**: high
-- **description**: create middleware to extract tenant_id from JWT and inject into request context
-- **dependencies**: JWT authentication
-- **notes**:
-
 ### 🔴 setup initial GraphQL schema
 
 - **assigned to**: backend lead
@@ -135,13 +127,13 @@ this document tracks current tasks for the typescript-aws-dashboard project.
 
 ## DevOps Tasks
 
-### 🔴 setup CI/CD pipeline
+### 🟡 setup CI/CD pipeline
 
 - **assigned to**: devops lead
 - **priority**: medium
 - **description**: configure GitHub Actions for testing and building
 - **dependencies**: none
-- **notes**:
+- **notes**: started 2026-02-08
 
 ### 🔴 add Docker configuration
 
@@ -152,6 +144,20 @@ this document tracks current tasks for the typescript-aws-dashboard project.
 - **notes**:
 
 ## Completed Tasks
+
+### 🟢 implement tenant context middleware (2026-02-08)
+
+- **assigned to**: backend lead
+- **priority**: high
+- **description**: create middleware to extract tenant_id from JWT and inject into request context
+- **implementation**:
+  - created `backend/src/middleware.rs` with TenantContext struct
+  - implemented extract_tenant_context to parse Authorization header and verify JWT
+  - integrated middleware into graphql handler in `backend/src/main.rs`
+  - added TenantContext injection into GraphQL execution context
+  - created currentUser query to demonstrate tenant-aware GraphQL queries
+  - added async-graphql uuid and chrono features to support User model in GraphQL
+  - User model marked as SimpleObject with password_hash field excluded from GraphQL schema
 
 ### 🟢 setup PostgreSQL database connection (2026-02-08)
 

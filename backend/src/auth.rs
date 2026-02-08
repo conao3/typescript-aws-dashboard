@@ -1,5 +1,5 @@
 use chrono::{Duration, Utc};
-use jsonwebtoken::{decode, encode, DecodingKey, EncodingKey, Header, Validation};
+use jsonwebtoken::{DecodingKey, EncodingKey, Header, Validation, decode, encode};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
@@ -22,7 +22,12 @@ impl JwtConfig {
         Self { secret }
     }
 
-    pub fn generate_token(&self, user_id: Uuid, tenant_id: Uuid, email: String) -> Result<String, jsonwebtoken::errors::Error> {
+    pub fn generate_token(
+        &self,
+        user_id: Uuid,
+        tenant_id: Uuid,
+        email: String,
+    ) -> Result<String, jsonwebtoken::errors::Error> {
         let expiration = Utc::now()
             .checked_add_signed(Duration::hours(24))
             .expect("valid timestamp")

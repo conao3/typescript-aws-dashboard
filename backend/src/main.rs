@@ -5,6 +5,7 @@ use async_graphql_actix_web::{GraphQLRequest, GraphQLResponse};
 
 mod auth;
 mod db;
+mod middleware;
 mod models;
 
 struct QueryRoot;
@@ -18,30 +19,51 @@ impl QueryRoot {
     async fn version(&self) -> &str {
         "1.0.0"
     }
+
+    async fn current_user(&self, ctx: &Context<'_>) -> async_graphql::Result<models::User> {
+        let tenant_ctx = ctx.data::<middleware::TenantContext>()
+            .map_err(|_| async_graphql::Error::new("unauthorized"))?;
+        let pool = ctx.data::<sqlx::PgPool>()?;
+
+        let user = sqlx::query_as::<_, models::User>(
+            "SELECT * FROM dashboard.users WHERE id = $1 AND tenant_id = $2"
+        )
+        .bind(tenant_ctx.user_id)
+        .bind(tenant_ctx.tenant_id)
+        .fetch_optional(pool)
+        .await?
+        .ok_or_else(|| async_graphql::Error::new("user not found"))?;
+
+        Ok(user)
+    }
 }
 
 struct MutationRoot;
 
 #[Object]
 impl MutationRoot {
-    async fn login(&self, ctx: &Context<'_>, email: String, password: String) -> async_graphql::Result<String> {
+    async fn login(
+        &self,
+        ctx: &Context<'_>,
+        email: String,
+        password: String,
+    ) -> async_graphql::Result<String> {
         let pool = ctx.data::<sqlx::PgPool>()?;
         let jwt_config = ctx.data::<auth::JwtConfig>()?;
 
-        let user = sqlx::query_as::<_, models::User>(
-            "SELECT * FROM dashboard.users WHERE email = $1"
-        )
-        .bind(&email)
-        .fetch_optional(pool)
-        .await?
-        .ok_or_else(|| async_graphql::Error::new("invalid credentials"))?;
+        let user =
+            sqlx::query_as::<_, models::User>("SELECT * FROM dashboard.users WHERE email = $1")
+                .bind(&email)
+                .fetch_optional(pool)
+                .await?
+                .ok_or_else(|| async_graphql::Error::new("invalid credentials"))?;
 
         if !auth::verify_password(&password, &user.password_hash)? {
             return Err(async_graphql::Error::new("invalid credentials"));
         }
 
         let tenant = sqlx::query_as::<_, models::Tenant>(
-            "SELECT * FROM dashboard.tenants WHERE id = $1 AND is_active = true"
+            "SELECT * FROM dashboard.tenants WHERE id = $1 AND is_active = true",
         )
         .bind(user.tenant_id)
         .fetch_optional(pool)
@@ -56,8 +78,19 @@ impl MutationRoot {
 
 type AppSchema = Schema<QueryRoot, MutationRoot, EmptySubscription>;
 
-async fn graphql(schema: web::Data<AppSchema>, req: GraphQLRequest) -> GraphQLResponse {
-    schema.execute(req.into_inner()).await.into()
+async fn graphql(
+    schema: web::Data<AppSchema>,
+    http_req: actix_web::HttpRequest,
+    req: GraphQLRequest,
+) -> GraphQLResponse {
+    let jwt_config = schema.data::<auth::JwtConfig>().unwrap();
+    let mut request = req.into_inner();
+
+    if let Some(tenant_ctx) = middleware::extract_tenant_context(&http_req, jwt_config) {
+        request = request.data(tenant_ctx);
+    }
+
+    schema.execute(request).await.into()
 }
 
 async fn graphiql() -> Result<HttpResponse> {
