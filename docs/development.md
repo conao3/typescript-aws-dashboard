@@ -23,13 +23,13 @@ cd typescript-aws-dashboard
 
 ```bash
 # backend lead
-git worktree add -b work/backend worktree-backend main
+git worktree add -b work/backend worktree-backend master
 
 # frontend lead
-git worktree add -b work/frontend worktree-frontend main
+git worktree add -b work/frontend worktree-frontend master
 
 # devops lead
-git worktree add -b work/devops worktree-devops main
+git worktree add -b work/devops worktree-devops master
 ```
 
 then navigate to your worktree:
@@ -218,7 +218,7 @@ see [worktree.md](./worktree.md) for complete worktree guide.
 
 ### branching strategy
 
-- `main`: main branch (protected, PdM)
+- `master`: master branch (protected, PdM)
 - `work/backend`: backend lead persistent branch
 - `work/frontend`: frontend lead persistent branch
 - `work/devops`: devops lead persistent branch

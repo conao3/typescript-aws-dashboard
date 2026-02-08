@@ -44,15 +44,15 @@ all task assignments and coordination go through the PdM (product manager). alwa
 
 ```bash
 # backend lead
-git worktree add -b work/backend worktree-backend main
+git worktree add -b work/backend worktree-backend master
 cd worktree-backend
 
 # frontend lead
-git worktree add -b work/frontend worktree-frontend main
+git worktree add -b work/frontend worktree-frontend master
 cd worktree-frontend
 
 # devops lead
-git worktree add -b work/devops worktree-devops main
+git worktree add -b work/devops worktree-devops master
 cd worktree-devops
 ```
 
@@ -66,7 +66,7 @@ cd worktree-devops
 2. sync with main:
    ```bash
    git fetch origin
-   git rebase origin/main
+   git rebase origin/master
    ```
 
 3. make changes in your responsibility area

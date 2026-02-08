@@ -28,7 +28,7 @@ typescript-aws-dashboard/          # main directory (for PdM)
 ```
 
 each worktree has its own branch:
-- main directory: `main` branch
+- main directory: `master` branch
 - worktree-backend: `work/backend` branch
 - worktree-frontend: `work/frontend` branch
 - worktree-devops: `work/devops` branch
@@ -41,7 +41,7 @@ each worktree has its own branch:
 
 ```bash
 cd typescript-aws-dashboard
-git worktree add -b work/backend worktree-backend main
+git worktree add -b work/backend worktree-backend master
 cd worktree-backend
 ```
 
@@ -49,7 +49,7 @@ cd worktree-backend
 
 ```bash
 cd typescript-aws-dashboard
-git worktree add -b work/frontend worktree-frontend main
+git worktree add -b work/frontend worktree-frontend master
 cd worktree-frontend
 ```
 
@@ -57,7 +57,7 @@ cd worktree-frontend
 
 ```bash
 cd typescript-aws-dashboard
-git worktree add -b work/devops worktree-devops main
+git worktree add -b work/devops worktree-devops master
 cd worktree-devops
 ```
 
@@ -80,13 +80,13 @@ cd typescript-aws-dashboard/worktree-frontend
 cd typescript-aws-dashboard/worktree-devops
 ```
 
-### 2. sync with main branch
+### 2. sync with master branch
 
-before starting work, sync your branch with main:
+before starting work, sync your branch with master:
 
 ```bash
 git fetch origin
-git rebase origin/main
+git rebase origin/master
 ```
 
 if there are conflicts:
@@ -133,31 +133,31 @@ git push -u origin work/backend
 git push
 ```
 
-### 6. integrate to main
+### 6. integrate to master
 
 option 1: create pull request
 
 ```bash
-gh pr create --base main --head work/backend --title "..." --body "..."
+gh pr create --base master --head work/backend --title "..." --body "..."
 ```
 
 option 2: merge directly (after approval)
 
 ```bash
 cd typescript-aws-dashboard  # go to main directory
-git checkout main
+git checkout master
 git merge work/backend
 git push origin main
 ```
 
 ### 7. sync after merge
 
-after your changes are merged to main:
+after your changes are merged to master:
 
 ```bash
 cd worktree-backend  # or your worktree
 git fetch origin
-git rebase origin/main
+git rebase origin/master
 ```
 
 ## Worktree Commands
@@ -171,7 +171,7 @@ git worktree list
 output example:
 
 ```
-/home/user/typescript-aws-dashboard                    abc1234 [main]
+/home/user/typescript-aws-dashboard                    abc1234 [master]
 /home/user/typescript-aws-dashboard/worktree-backend  def5678 [work/backend]
 /home/user/typescript-aws-dashboard/worktree-frontend ghi9012 [work/frontend]
 ```
@@ -232,7 +232,7 @@ if the worktree directory exists but git doesn't know about it:
 ```bash
 git worktree prune
 rm -rf worktree-backend  # or the problematic directory
-git worktree add -b work/backend worktree-backend main
+git worktree add -b work/backend worktree-backend master
 ```
 
 ### "branch already exists"
@@ -245,7 +245,7 @@ git worktree add worktree-backend work/backend
 
 # or delete and recreate
 git branch -d work/backend
-git worktree add -b work/backend worktree-backend main
+git worktree add -b work/backend worktree-backend master
 ```
 
 ### accidentally committed in wrong worktree
@@ -269,11 +269,11 @@ git cherry-pick <commit-hash>
 
 ### worktree out of sync
 
-if your worktree is far behind main:
+if your worktree is far behind master:
 
 ```bash
 git fetch origin
-git rebase origin/main
+git rebase origin/master
 ```
 
 if rebase is too complex:
@@ -282,8 +282,8 @@ if rebase is too complex:
 # create backup branch
 git branch backup-work
 
-# reset to main
-git reset --hard origin/main
+# reset to master
+git reset --hard origin/master
 
 # cherry-pick your commits
 git cherry-pick <your-commits>
@@ -292,7 +292,7 @@ git cherry-pick <your-commits>
 ## Best Practices
 
 1. **always work in your assigned worktree**
-2. **sync with main before starting new work**
+2. **sync with master before starting new work**
 3. **commit small and frequently**
 4. **push regularly to avoid losing work**
 5. **never edit files outside your responsibility area**

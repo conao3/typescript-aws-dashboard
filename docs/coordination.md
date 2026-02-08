@@ -77,9 +77,9 @@ typescript-aws-dashboard/          # main (PdM)
 ### worktree setup (one time)
 
 ```bash
-git worktree add -b work/backend worktree-backend main
-git worktree add -b work/frontend worktree-frontend main
-git worktree add -b work/devops worktree-devops main
+git worktree add -b work/backend worktree-backend master
+git worktree add -b work/frontend worktree-frontend master
+git worktree add -b work/devops worktree-devops master
 ```
 
 see [worktree.md](./worktree.md) for detailed guide.
@@ -94,7 +94,7 @@ see [worktree.md](./worktree.md) for detailed guide.
 2. **sync with main**:
    ```bash
    git fetch origin
-   git rebase origin/main
+   git rebase origin/master
    ```
 
 3. **make changes** in your responsibility area
@@ -110,7 +110,7 @@ see [worktree.md](./worktree.md) for detailed guide.
    git push -u origin work/backend
    ```
 
-6. **integrate to main** (create PR or merge directly)
+6. **integrate to master** (create PR or merge directly)
 
 ### commit rules
 
@@ -199,7 +199,7 @@ boundary between backend and frontend:
 
 ## Best Practices
 
-1. **always start work from latest main branch**
+1. **always start work from latest master branch**
 2. **commit small and frequently** (when user instructs)
 3. **clear commit messages**
 4. **write tests**
