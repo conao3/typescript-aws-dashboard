@@ -56,12 +56,6 @@ git worktree add -b work/devops worktree-devops main
 cd worktree-devops
 ```
 
-or use the setup script:
-
-```bash
-./scripts/setup-worktrees.sh
-```
-
 ### daily workflow in worktree
 
 1. navigate to your worktree:

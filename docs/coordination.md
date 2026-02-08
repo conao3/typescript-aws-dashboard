@@ -77,10 +77,6 @@ typescript-aws-dashboard/          # main (PdM)
 ### worktree setup (one time)
 
 ```bash
-# run from main directory
-./scripts/setup-worktrees.sh
-
-# or manually:
 git worktree add -b work/backend worktree-backend main
 git worktree add -b work/frontend worktree-frontend main
 git worktree add -b work/devops worktree-devops main

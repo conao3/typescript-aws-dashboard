@@ -22,10 +22,6 @@ cd typescript-aws-dashboard
 **IMPORTANT**: if you are a Claude Code instance, create your worktree:
 
 ```bash
-# use setup script (recommended)
-./scripts/setup-worktrees.sh
-
-# or manually:
 # backend lead
 git worktree add -b work/backend worktree-backend main
 
