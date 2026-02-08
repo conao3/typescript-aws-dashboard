@@ -1,5 +1,5 @@
-import { Link } from '@tanstack/react-router'
-import { Home, Settings, Users } from 'lucide-react'
+import { Link } from "@tanstack/react-router";
+import { Home, Settings, Users } from "lucide-react";
 
 export function Sidebar() {
   return (
@@ -21,7 +21,7 @@ export function Sidebar() {
         </nav>
       </div>
     </aside>
-  )
+  );
 }
 
 function SidebarLink({
@@ -29,20 +29,20 @@ function SidebarLink({
   icon,
   children,
 }: {
-  to: string
-  icon: React.ReactNode
-  children: React.ReactNode
+  to: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
 }) {
   return (
     <Link
       to={to}
       className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-gray-800"
       activeProps={{
-        className: 'bg-gray-800',
+        className: "bg-gray-800",
       }}
     >
       {icon}
       {children}
     </Link>
-  )
+  );
 }

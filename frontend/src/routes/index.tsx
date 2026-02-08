@@ -1,7 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { AppHeader, Sidebar } from '../components/layout'
+import { createFileRoute } from "@tanstack/react-router";
+import { AppHeader, Sidebar } from "../components/layout";
 
-export const Route = createFileRoute('/')({ component: Dashboard })
+export const Route = createFileRoute("/")({ component: Dashboard });
 
 function Dashboard() {
   return (
@@ -33,7 +33,7 @@ function Dashboard() {
         </main>
       </div>
     </div>
-  )
+  );
 }
 
 function DashboardCard({
@@ -41,9 +41,9 @@ function DashboardCard({
   value,
   description,
 }: {
-  title: string
-  value: string
-  description: string
+  title: string;
+  value: string;
+  description: string;
 }) {
   return (
     <div className="rounded-lg bg-white p-6 shadow">
@@ -51,5 +51,5 @@ function DashboardCard({
       <p className="mt-2 text-3xl font-semibold text-gray-900">{value}</p>
       <p className="mt-1 text-sm text-gray-600">{description}</p>
     </div>
-  )
+  );
 }

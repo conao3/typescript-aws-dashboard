@@ -1,38 +1,46 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { Button, TextField, Label, Input, FieldError } from 'react-aria-components'
-import { useState, useEffect } from 'react'
-import { useAuth } from '../lib/auth'
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import {
+  Button,
+  TextField,
+  Label,
+  Input,
+  FieldError,
+} from "react-aria-components";
+import { useState, useEffect } from "react";
+import { useAuth } from "../lib/auth";
 
-export const Route = createFileRoute('/login')({ component: Login })
+export const Route = createFileRoute("/login")({ component: Login });
 
 function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const { isAuthenticated, login } = useAuth()
-  const navigate = useNavigate()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { isAuthenticated, login } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate({ to: '/' })
+      navigate({ to: "/" });
     }
-  }, [isAuthenticated, navigate])
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
-    setIsLoading(true)
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
 
     try {
-      console.log('Login attempt:', { email, password })
-      setError('Backend authentication not yet implemented. Please implement JWT login in the backend first.')
+      console.log("Login attempt:", { email, password });
+      setError(
+        "Backend authentication not yet implemented. Please implement JWT login in the backend first.",
+      );
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed')
+      setError(err instanceof Error ? err.message : "Login failed");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
@@ -95,10 +103,10 @@ function Login() {
             isDisabled={isLoading}
             className="group relative flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-50"
           >
-            {isLoading ? 'Signing in...' : 'Sign in'}
+            {isLoading ? "Signing in..." : "Sign in"}
           </Button>
         </form>
       </div>
     </div>
-  )
+  );
 }

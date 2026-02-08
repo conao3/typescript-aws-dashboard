@@ -1,15 +1,15 @@
-import { Link, useNavigate } from '@tanstack/react-router'
-import { Button } from 'react-aria-components'
-import { useAuth } from '../../lib/auth'
+import { Link, useNavigate } from "@tanstack/react-router";
+import { Button } from "react-aria-components";
+import { useAuth } from "../../lib/auth";
 
 export function AppHeader() {
-  const { isAuthenticated, user, logout } = useAuth()
-  const navigate = useNavigate()
+  const { isAuthenticated, user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout()
-    navigate({ to: '/login' })
-  }
+    logout();
+    navigate({ to: "/login" });
+  };
 
   return (
     <header className="bg-white shadow">
@@ -50,5 +50,5 @@ export function AppHeader() {
         </div>
       </div>
     </header>
-  )
+  );
 }
