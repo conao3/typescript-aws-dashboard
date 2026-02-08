@@ -91,10 +91,9 @@ see [worktree.md](./worktree.md) for detailed guide.
    cd worktree-backend  # or worktree-frontend, worktree-devops
    ```
 
-2. **sync with main**:
+2. **sync with master**:
    ```bash
-   git fetch origin
-   git rebase origin/master
+   git rebase master
    ```
 
 3. **make changes** in your responsibility area
@@ -112,15 +111,13 @@ see [worktree.md](./worktree.md) for detailed guide.
 
 6. **integrate to master** (after work is complete):
    ```bash
-   # rebase onto latest master
-   git fetch origin
-   git rebase origin/master
+   # rebase work branch onto master
+   git rebase master
 
-   # switch to master and merge
-   cd ../  # go to main directory
-   git checkout master
+   # merge to master
+   cd ../
    git merge work/backend
-   git push origin master
+   git push
    ```
 
 ### commit rules

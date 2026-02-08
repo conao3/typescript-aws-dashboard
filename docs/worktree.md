@@ -85,8 +85,7 @@ cd typescript-aws-dashboard/worktree-devops
 before starting work, sync your branch with master:
 
 ```bash
-git fetch origin
-git rebase origin/master
+git rebase master
 ```
 
 if there are conflicts:
@@ -135,21 +134,16 @@ git push
 
 ### 6. integrate to master
 
-after work is complete, rebase onto latest master and merge:
+after work is complete, rebase onto master and merge:
 
 ```bash
-# in your worktree
-cd worktree-backend  # or your worktree
+# rebase work branch onto master
+git rebase master
 
-# rebase onto latest master
-git fetch origin
-git rebase origin/master
-
-# go to main directory and merge
+# merge to master
 cd ../
-git checkout master
 git merge work/backend
-git push origin master
+git push
 
 # return to worktree for next task
 cd worktree-backend
@@ -267,8 +261,7 @@ git cherry-pick <commit-hash>
 if your worktree is far behind master:
 
 ```bash
-git fetch origin
-git rebase origin/master
+git rebase master
 ```
 
 if rebase is too complex:
@@ -277,8 +270,8 @@ if rebase is too complex:
 # create backup branch
 git branch backup-work
 
-# reset to master
-git reset --hard origin/master
+# reset work branch to master
+git reset --hard master
 
 # cherry-pick your commits
 git cherry-pick <your-commits>
