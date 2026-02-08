@@ -11,14 +11,6 @@ this document tracks current tasks for the typescript-aws-dashboard project.
 
 ## Backend Tasks
 
-### 🔴 create initial schema with multi-tenancy
-
-- **assigned to**: backend lead
-- **priority**: high
-- **description**: create backend/schema.sql with tenants table and initial schema with tenant_id columns
-- **dependencies**: sqldef setup
-- **notes**: define complete schema in schema.sql, apply with psqldef
-
 ### 🔴 implement JWT authentication
 
 - **assigned to**: backend lead
@@ -192,6 +184,19 @@ this document tracks current tasks for the typescript-aws-dashboard project.
   - added `make db-migrate-dry` for schema change preview
   - added `make db-migrate` for schema application
   - successfully applied initial schema with tenants table, indexes, and constraints
+
+### 🟢 create initial schema with multi-tenancy (2026-02-08)
+
+- **assigned to**: backend lead
+- **priority**: high
+- **description**: create backend/schema.sql with tenants table and initial schema with tenant_id columns
+- **implementation**:
+  - created `dashboard.users` table with tenant_id, authentication fields
+  - created `dashboard.aws_credentials` table with encrypted credential storage
+  - created `dashboard.ec2_ami_import_tasks` table for AMI import tracking
+  - all tables include tenant_id with foreign key to tenants(id) on delete cascade
+  - added tenant_id indexes on all tenant-specific tables
+  - added unique constraints: users(tenant_id, email), ec2_ami_import_tasks(tenant_id, import_task_id)
 
 ---
 
