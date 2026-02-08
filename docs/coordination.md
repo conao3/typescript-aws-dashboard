@@ -61,64 +61,9 @@ tasks are tracked in [tasks.md](./tasks.md).
 
 ## Git Workflow
 
-### git worktree strategy (CRITICAL)
+### branching strategy
 
-**each Claude Code instance must work in a separate git worktree** to avoid staging area conflicts.
-
-worktree structure:
-
-```
-typescript-aws-dashboard/          # main (PdM)
-├── worktree-backend/             # backend lead (work/backend)
-├── worktree-frontend/            # frontend lead (work/frontend)
-└── worktree-devops/              # devops lead (work/devops)
-```
-
-### worktree setup (one time)
-
-```bash
-git worktree add -b work/backend worktree-backend master
-git worktree add -b work/frontend worktree-frontend master
-git worktree add -b work/devops worktree-devops master
-```
-
-see [worktree.md](./worktree.md) for detailed guide.
-
-### daily workflow
-
-1. **work in your worktree**:
-   ```bash
-   cd worktree-backend  # or worktree-frontend, worktree-devops
-   ```
-
-2. **sync with master**:
-   ```bash
-   git rebase master
-   ```
-
-3. **make changes** in your responsibility area
-
-4. **commit** (when instructed):
-   ```bash
-   git add <your-files>
-   git commit -m "message"
-   ```
-
-5. **push your work branch**:
-   ```bash
-   git push -u origin work/backend
-   ```
-
-6. **integrate to master** (after work is complete):
-   ```bash
-   # rebase work branch onto master
-   git rebase master
-
-   # merge to master
-   cd ../
-   git merge work/backend
-   git push
-   ```
+work directly on the master branch in the main directory.
 
 ### commit rules
 

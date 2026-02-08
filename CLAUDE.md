@@ -36,64 +36,6 @@ all task assignments and coordination go through the PdM (product manager). alwa
 - blockers
 - major design decisions
 
-## Git Worktree Setup
-
-**CRITICAL**: to avoid staging area conflicts, each Claude Code instance must work in a separate git worktree.
-
-### setup your worktree (one time only)
-
-```bash
-# backend lead
-git worktree add -b work/backend worktree-backend master
-cd worktree-backend
-
-# frontend lead
-git worktree add -b work/frontend worktree-frontend master
-cd worktree-frontend
-
-# devops lead
-git worktree add -b work/devops worktree-devops master
-cd worktree-devops
-```
-
-### daily workflow in worktree
-
-1. navigate to your worktree:
-   ```bash
-   cd worktree-backend  # or worktree-frontend, worktree-devops
-   ```
-
-2. sync with master:
-   ```bash
-   git rebase master
-   ```
-
-3. make changes in your responsibility area
-
-4. stage and commit:
-   ```bash
-   git add <your-files>
-   git commit -m "message"
-   ```
-
-5. push your branch:
-   ```bash
-   git push -u origin work/backend
-   ```
-
-6. integrate to master (after work is complete):
-   ```bash
-   # rebase work branch onto master
-   git rebase master
-
-   # merge to master
-   cd ../
-   git merge work/backend
-   git push
-   ```
-
-see [docs/worktree.md](./docs/worktree.md) for complete guide.
-
 ## Development Server Restrictions
 
 **IMPORTANT**: do NOT start backend or frontend development servers. the user is already running them in watch mode:
@@ -107,7 +49,7 @@ Claude Code instances should never execute:
 - `make dev`
 - any command that starts these servers
 
-the servers automatically reload when you make code changes (including in worktrees).
+the servers automatically reload when you make code changes.
 
 ## Commit Policy
 
@@ -135,15 +77,6 @@ DO NOT commit:
 
 ### before committing
 
-**ensure you are in your worktree**:
-
-```bash
-pwd  # must show worktree-backend, worktree-frontend, or worktree-devops
-git branch --show-current  # must show work/backend, work/frontend, or work/devops
-```
-
-then:
-
 1. run `git status` to see all changes
 2. run `git diff` to review each change
 3. only stage files (`git add`) that are within your responsibility
@@ -153,10 +86,6 @@ then:
 ### example workflow
 
 ```bash
-# 0. ensure in correct worktree
-cd worktree-backend
-pwd  # verify location
-
 # 1. check all changes
 git status
 
