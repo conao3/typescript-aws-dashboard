@@ -11,14 +11,6 @@ this document tracks current tasks for the typescript-aws-dashboard project.
 
 ## Backend Tasks
 
-### 🔴 implement EC2 GraphQL schema
-
-- **assigned to**: backend lead
-- **priority**: high
-- **description**: define GraphQL schema for EC2 AMI import tasks queries and mutations
-- **dependencies**: EC2 AMI import task sync
-- **notes**: include filtering and pagination
-
 ### 🔴 implement health check endpoint
 
 - **assigned to**: backend lead
@@ -146,6 +138,23 @@ this document tracks current tasks for the typescript-aws-dashboard project.
   - uses ON CONFLICT to update existing tasks or insert new ones
   - returns list of synced tasks with all details
   - updated docs/api.md with Ec2AmiImportTask type and syncImportImageTasks mutation
+
+### 🟢 implement EC2 GraphQL schema (2026-02-08)
+
+- **assigned to**: backend lead
+- **priority**: high
+- **description**: define GraphQL schema for EC2 AMI import tasks queries and mutations
+- **implementation**:
+  - added Ec2AmiImportTaskFilter input type to `backend/src/models.rs`
+  - filter supports aws_credential_id, status, import_task_id, limit, and offset
+  - implemented ec2AmiImportTasks query in `backend/src/main.rs` with filtering and pagination
+  - dynamically builds SQL query based on filter parameters
+  - default limit is 100, max limit is 1000
+  - implemented ec2AmiImportTask query to fetch single task by ID
+  - enforces tenant isolation on all queries
+  - updated docs/api.md with ec2AmiImportTasks and ec2AmiImportTask queries
+  - added Ec2AmiImportTaskFilter type documentation
+  - added usage examples with and without filters
 
 ### 🟢 implement AWS credentials management (2026-02-08)
 

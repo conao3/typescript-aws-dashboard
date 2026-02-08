@@ -96,6 +96,94 @@ impl QueryRoot {
             updated_at: row.updated_at,
         })
     }
+
+    async fn ec2_ami_import_tasks(
+        &self,
+        ctx: &Context<'_>,
+        filter: Option<models::Ec2AmiImportTaskFilter>,
+    ) -> async_graphql::Result<Vec<models::Ec2AmiImportTask>> {
+        let tenant_ctx = ctx
+            .data::<middleware::TenantContext>()
+            .map_err(|_| async_graphql::Error::new("unauthorized"))?;
+        let pool = ctx.data::<sqlx::PgPool>()?;
+
+        let filter = filter.unwrap_or(models::Ec2AmiImportTaskFilter {
+            aws_credential_id: None,
+            status: None,
+            import_task_id: None,
+            limit: Some(100),
+            offset: Some(0),
+        });
+
+        let limit = filter.limit.unwrap_or(100).min(1000);
+        let offset = filter.offset.unwrap_or(0);
+
+        let mut query = String::from(
+            "SELECT * FROM dashboard.ec2_ami_import_tasks WHERE tenant_id = $1",
+        );
+        let mut bind_count = 1;
+
+        if filter.aws_credential_id.is_some() {
+            bind_count += 1;
+            query.push_str(&format!(" AND aws_credential_id = ${}", bind_count));
+        }
+
+        if filter.status.is_some() {
+            bind_count += 1;
+            query.push_str(&format!(" AND status = ${}", bind_count));
+        }
+
+        if filter.import_task_id.is_some() {
+            bind_count += 1;
+            query.push_str(&format!(" AND import_task_id = ${}", bind_count));
+        }
+
+        query.push_str(" ORDER BY created_at DESC");
+        query.push_str(&format!(" LIMIT ${} OFFSET ${}", bind_count + 1, bind_count + 2));
+
+        let mut sqlx_query = sqlx::query_as::<_, models::Ec2AmiImportTask>(&query)
+            .bind(tenant_ctx.tenant_id);
+
+        if let Some(credential_id) = filter.aws_credential_id {
+            sqlx_query = sqlx_query.bind(credential_id);
+        }
+
+        if let Some(status) = filter.status {
+            sqlx_query = sqlx_query.bind(status);
+        }
+
+        if let Some(import_task_id) = filter.import_task_id {
+            sqlx_query = sqlx_query.bind(import_task_id);
+        }
+
+        sqlx_query = sqlx_query.bind(limit).bind(offset);
+
+        let tasks = sqlx_query.fetch_all(pool).await?;
+
+        Ok(tasks)
+    }
+
+    async fn ec2_ami_import_task(
+        &self,
+        ctx: &Context<'_>,
+        id: uuid::Uuid,
+    ) -> async_graphql::Result<models::Ec2AmiImportTask> {
+        let tenant_ctx = ctx
+            .data::<middleware::TenantContext>()
+            .map_err(|_| async_graphql::Error::new("unauthorized"))?;
+        let pool = ctx.data::<sqlx::PgPool>()?;
+
+        let task = sqlx::query_as::<_, models::Ec2AmiImportTask>(
+            "SELECT * FROM dashboard.ec2_ami_import_tasks WHERE id = $1 AND tenant_id = $2",
+        )
+        .bind(id)
+        .bind(tenant_ctx.tenant_id)
+        .fetch_optional(pool)
+        .await?
+        .ok_or_else(|| async_graphql::Error::new("task not found"))?;
+
+        Ok(task)
+    }
 }
 
 struct MutationRoot;

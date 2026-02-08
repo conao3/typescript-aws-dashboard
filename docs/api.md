@@ -18,6 +18,8 @@ type Query {
   currentUser: User!
   awsCredentials: [AwsCredential!]!
   awsCredential(id: ID!): AwsCredential!
+  ec2AmiImportTasks(filter: Ec2AmiImportTaskFilter): [Ec2AmiImportTask!]!
+  ec2AmiImportTask(id: ID!): Ec2AmiImportTask!
 }
 ```
 
@@ -110,6 +112,14 @@ type Ec2AmiImportTask {
   tags: JSON
   createdAt: DateTime!
   updatedAt: DateTime!
+}
+
+input Ec2AmiImportTaskFilter {
+  awsCredentialId: ID
+  status: String
+  importTaskId: String
+  limit: Int
+  offset: Int
 }
 
 scalar DateTime
@@ -319,6 +329,69 @@ mutation {
 ```
 
 fetches all AMI import tasks from AWS API using the specified credential and stores them in the database. returns the list of synced tasks. existing tasks are updated (upsert).
+
+### list EC2 AMI import tasks (requires authentication)
+
+```graphql
+query {
+  ec2AmiImportTasks {
+    id
+    importTaskId
+    status
+    statusMessage
+    imageId
+    architecture
+    platform
+    progress
+    createdAt
+    updatedAt
+  }
+}
+```
+
+with filtering and pagination:
+
+```graphql
+query {
+  ec2AmiImportTasks(filter: {
+    awsCredentialId: "uuid-here"
+    status: "completed"
+    limit: 20
+    offset: 0
+  }) {
+    id
+    importTaskId
+    status
+    imageId
+    progress
+  }
+}
+```
+
+### get EC2 AMI import task (requires authentication)
+
+```graphql
+query {
+  ec2AmiImportTask(id: "uuid-here") {
+    id
+    awsCredentialId
+    importTaskId
+    status
+    statusMessage
+    imageId
+    architecture
+    description
+    hypervisor
+    licenseType
+    platform
+    progress
+    snapshotDetails
+    tags
+    createdAt
+    updatedAt
+  }
+}
+```
 
 ## Versioning
 

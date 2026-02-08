@@ -103,3 +103,12 @@ pub struct Ec2AmiImportTask {
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }
+
+#[derive(InputObject)]
+pub struct Ec2AmiImportTaskFilter {
+    pub aws_credential_id: Option<Uuid>,
+    pub status: Option<String>,
+    pub import_task_id: Option<String>,
+    pub limit: Option<i32>,
+    pub offset: Option<i32>,
+}
