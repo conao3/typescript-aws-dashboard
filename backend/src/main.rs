@@ -1,6 +1,6 @@
 use actix_cors::Cors;
-use actix_web::{guard, web, App, HttpResponse, HttpServer, Result};
-use async_graphql::{http::GraphiQLSource, EmptyMutation, EmptySubscription, Object, Schema};
+use actix_web::{App, HttpResponse, HttpServer, Result, guard, web};
+use async_graphql::{EmptyMutation, EmptySubscription, Object, Schema, http::GraphiQLSource};
 use async_graphql_actix_web::{GraphQLRequest, GraphQLResponse};
 
 struct QueryRoot;
@@ -41,7 +41,11 @@ async fn main() -> std::io::Result<()> {
             .wrap(Cors::permissive())
             .app_data(web::Data::new(schema.clone()))
             .service(web::resource("/graphql").guard(guard::Post()).to(graphql))
-            .service(web::resource("/admin/graphiql").guard(guard::Get()).to(graphiql))
+            .service(
+                web::resource("/admin/graphiql")
+                    .guard(guard::Get())
+                    .to(graphiql),
+            )
     })
     .bind(("127.0.0.1", 17231))?
     .run()

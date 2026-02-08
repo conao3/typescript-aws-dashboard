@@ -44,7 +44,7 @@ uses standard GraphQL error responses.
   "errors": [
     {
       "message": "error message",
-      "locations": [{"line": 2, "column": 3}],
+      "locations": [{ "line": 2, "column": 3 }],
       "path": ["fieldName"]
     }
   ],

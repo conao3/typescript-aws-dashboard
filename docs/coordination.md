@@ -5,6 +5,7 @@ this document provides guidelines for multiple Claude Code instances to collabor
 ## Role Assignments
 
 ### Claude Code A: backend lead
+
 - responsibility: `backend/` directory and Rust code
 - main tasks:
   - GraphQL API implementation
@@ -13,6 +14,7 @@ this document provides guidelines for multiple Claude Code instances to collabor
   - backend testing and refactoring
 
 ### Claude Code B: frontend lead
+
 - responsibility: `frontend/` directory and TypeScript code
 - main tasks:
   - UI/UX implementation
@@ -21,6 +23,7 @@ this document provides guidelines for multiple Claude Code instances to collabor
   - responsive design
 
 ### Claude Code C: devops/integration lead
+
 - responsibility: overall project integration and infrastructure
 - main tasks:
   - CI/CD setup

@@ -39,6 +39,7 @@ this installs frontend dependencies (pnpm install).
 #### development server
 
 the backend server is already running at:
+
 - server: http://localhost:17231
 - GraphiQL IDE: http://localhost:17231/admin/graphiql
 
@@ -66,6 +67,7 @@ make lint
 #### development server
 
 the frontend server is already running at:
+
 - frontend: http://localhost:17232
 
 **do NOT execute** `make dev` - the server is already running and will auto-reload on code changes.
