@@ -4,22 +4,22 @@ help:
 
 .PHONY: setup
 setup: ## setup project
-	nix develop -c pnpm install -C frontend
+	pnpm -C frontend install
 
 .PHONY: build
 build: ## build project
-	nix develop -c cargo build --manifest-path backend/Cargo.toml
-	nix develop -c pnpm build -C frontend
+	cargo build --manifest-path backend/Cargo.toml
+	pnpm -C frontend build
 
 .PHONY: build-release
 build-release: ## build project in release mode
-	nix develop -c cargo build --release --manifest-path backend/Cargo.toml
-	nix develop -c pnpm build -C frontend
+	cargo build --release --manifest-path backend/Cargo.toml
+	pnpm -C frontend build
 
 .PHONY: test
 test: ## run tests
-	nix develop -c cargo test --manifest-path backend/Cargo.toml
-	nix develop -c pnpm test -C frontend
+	cargo test --manifest-path backend/Cargo.toml
+	pnpm -C frontend test
 
 .PHONY: fmt
 fmt: ## format code
@@ -27,8 +27,8 @@ fmt: ## format code
 
 .PHONY: lint
 lint: ## lint code
-	nix develop -c cargo clippy --manifest-path backend/Cargo.toml
-	nix develop -c pnpm lint -C frontend
+	cargo clippy --manifest-path backend/Cargo.toml
+	pnpm -C frontend lint
 
 .PHONY: check
 check: ## check code
@@ -36,18 +36,18 @@ check: ## check code
 
 .PHONY: clean
 clean: ## clean build artifacts
-	nix develop -c cargo clean --manifest-path backend/Cargo.toml
+	cargo clean --manifest-path backend/Cargo.toml
 	rm -rf frontend/node_modules
 	rm -rf frontend/.output
 
 .PHONY: dev
 dev: ## start frontend development server
-	nix develop -c pnpm dev -C frontend
+	pnpm -C frontend dev
 
 .PHONY: dev-backend
 dev-backend: ## start backend server
-	nix develop -c cargo run --manifest-path backend/Cargo.toml
+	cargo run --manifest-path backend/Cargo.toml
 
 .PHONY: watch
 watch: ## watch and restart backend server on changes
-	nix develop -c cargo watch -x 'run --manifest-path backend/Cargo.toml'
+	cargo watch -x 'run --manifest-path backend/Cargo.toml'
