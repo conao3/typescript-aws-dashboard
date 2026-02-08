@@ -4,22 +4,22 @@ help:
 
 .PHONY: setup
 setup: ## setup project
-	nix develop -c pnpm install
+	nix develop -c pnpm install -C frontend
 
 .PHONY: build
 build: ## build project
 	nix develop -c cargo build --manifest-path backend/Cargo.toml
-	nix develop -c pnpm build
+	nix develop -c pnpm build -C frontend
 
 .PHONY: build-release
 build-release: ## build project in release mode
 	nix develop -c cargo build --release --manifest-path backend/Cargo.toml
-	nix develop -c pnpm build
+	nix develop -c pnpm build -C frontend
 
 .PHONY: test
 test: ## run tests
 	nix develop -c cargo test --manifest-path backend/Cargo.toml
-	nix develop -c pnpm test
+	nix develop -c pnpm test -C frontend
 
 .PHONY: fmt
 fmt: ## format code
@@ -28,7 +28,7 @@ fmt: ## format code
 .PHONY: lint
 lint: ## lint code
 	nix develop -c cargo clippy --manifest-path backend/Cargo.toml
-	nix develop -c pnpm lint
+	nix develop -c pnpm lint -C frontend
 
 .PHONY: check
 check: ## check code
@@ -37,12 +37,12 @@ check: ## check code
 .PHONY: clean
 clean: ## clean build artifacts
 	nix develop -c cargo clean --manifest-path backend/Cargo.toml
-	rm -rf node_modules
-	rm -rf dist
+	rm -rf frontend/node_modules
+	rm -rf frontend/.output
 
 .PHONY: dev
-dev: ## start development server
-	nix develop -c pnpm dev
+dev: ## start frontend development server
+	nix develop -c pnpm dev -C frontend
 
 .PHONY: dev-backend
 dev-backend: ## start backend server

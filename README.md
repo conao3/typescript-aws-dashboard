@@ -25,6 +25,8 @@ Start frontend development server:
 make dev
 ```
 
+Frontend: http://localhost:3000
+
 ## Build
 
 ```bash
