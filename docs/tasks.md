@@ -11,14 +11,6 @@ this document tracks current tasks for the typescript-aws-dashboard project.
 
 ## Backend Tasks
 
-### 🔴 setup PostgreSQL database connection
-
-- **assigned to**: backend lead
-- **priority**: high
-- **description**: configure PostgreSQL connection pool and basic database setup
-- **dependencies**: none
-- **notes**:
-
 ### 🔴 setup sqldef for schema management
 
 - **assigned to**: backend lead
@@ -129,7 +121,17 @@ this document tracks current tasks for the typescript-aws-dashboard project.
 
 ## Completed Tasks
 
-tasks marked as 🟢 DONE will be moved here with completion date.
+### 🟢 setup PostgreSQL database connection (2026-02-08)
+
+- **assigned to**: backend lead
+- **priority**: high
+- **description**: configure PostgreSQL connection pool and basic database setup
+- **implementation**:
+  - added sqlx 0.8 with PostgreSQL, UUID, and chrono support
+  - created `backend/src/db.rs` with connection pool initialization
+  - integrated pool into actix-web application state
+  - added `/health` endpoint for database connectivity check
+  - pool configuration: max 5 connections, DATABASE_URL environment variable support
 
 ---
 
