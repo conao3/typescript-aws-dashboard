@@ -5,11 +5,45 @@ import {
   Label,
   Input,
   FieldError,
+  Form,
+  Heading,
+  Text,
 } from "react-aria-components";
 import { useState, useEffect } from "react";
 import { useAuth } from "../lib/auth";
 
 export const Route = createFileRoute("/login")({ component: Login });
+
+const GRAPHQL_ENDPOINT = "http://localhost:17231/graphql";
+
+async function loginMutation(email: string, password: string): Promise<string> {
+  const response = await fetch(GRAPHQL_ENDPOINT, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query: `
+        mutation Login($email: String!, $password: String!) {
+          login(email: $email, password: $password)
+        }
+      `,
+      variables: { email, password },
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error: ${response.status}`);
+  }
+
+  const result = await response.json();
+
+  if (result.errors) {
+    throw new Error(result.errors[0]?.message || "Login failed");
+  }
+
+  return result.data.login;
+}
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -31,10 +65,9 @@ function Login() {
     setIsLoading(true);
 
     try {
-      console.log("Login attempt:", { email, password });
-      setError(
-        "Backend authentication not yet implemented. Please implement JWT login in the backend first.",
-      );
+      const token = await loginMutation(email, password);
+      login(token);
+      navigate({ to: "/" });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
@@ -46,16 +79,18 @@ function Login() {
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+          <Heading className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
             Sign in to your account
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          </Heading>
+          <Text className="mt-2 text-center text-sm text-gray-600">
             AWS Dashboard - Multi-tenant Application
-          </p>
+          </Text>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <Form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4 rounded-md shadow-sm">
             <TextField
+              name="email"
+              type="email"
               isRequired
               className="space-y-1"
               value={email}
@@ -65,7 +100,6 @@ function Login() {
                 Email address
               </Label>
               <Input
-                type="email"
                 autoComplete="email"
                 className="block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                 placeholder="you@example.com"
@@ -74,6 +108,8 @@ function Login() {
             </TextField>
 
             <TextField
+              name="password"
+              type="password"
               isRequired
               className="space-y-1"
               value={password}
@@ -83,7 +119,6 @@ function Login() {
                 Password
               </Label>
               <Input
-                type="password"
                 autoComplete="current-password"
                 className="block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                 placeholder="••••••••"
@@ -94,7 +129,7 @@ function Login() {
 
           {error && (
             <div className="rounded-md bg-red-50 p-4">
-              <p className="text-sm text-red-800">{error}</p>
+              <Text className="text-sm text-red-800">{error}</Text>
             </div>
           )}
 
@@ -105,7 +140,7 @@ function Login() {
           >
             {isLoading ? "Signing in..." : "Sign in"}
           </Button>
-        </form>
+        </Form>
       </div>
     </div>
   );
