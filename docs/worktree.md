@@ -135,29 +135,24 @@ git push
 
 ### 6. integrate to master
 
-option 1: create pull request
+after work is complete, rebase onto latest master and merge:
 
 ```bash
-gh pr create --base master --head work/backend --title "..." --body "..."
-```
-
-option 2: merge directly (after approval)
-
-```bash
-cd typescript-aws-dashboard  # go to main directory
-git checkout master
-git merge work/backend
-git push origin main
-```
-
-### 7. sync after merge
-
-after your changes are merged to master:
-
-```bash
+# in your worktree
 cd worktree-backend  # or your worktree
+
+# rebase onto latest master
 git fetch origin
 git rebase origin/master
+
+# go to main directory and merge
+cd ../
+git checkout master
+git merge work/backend
+git push origin master
+
+# return to worktree for next task
+cd worktree-backend
 ```
 
 ## Worktree Commands
@@ -294,9 +289,10 @@ git cherry-pick <your-commits>
 1. **always work in your assigned worktree**
 2. **sync with master before starting new work**
 3. **commit small and frequently**
-4. **push regularly to avoid losing work**
-5. **never edit files outside your responsibility area**
-6. **verify current worktree before committing** (`pwd` and `git branch`)
+4. **rebase and merge to master after completing work**
+5. **push regularly to avoid losing work**
+6. **never edit files outside your responsibility area**
+7. **verify current worktree before committing** (`pwd` and `git branch`)
 
 ## Reference
 

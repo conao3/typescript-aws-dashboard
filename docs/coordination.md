@@ -110,7 +110,18 @@ see [worktree.md](./worktree.md) for detailed guide.
    git push -u origin work/backend
    ```
 
-6. **integrate to master** (create PR or merge directly)
+6. **integrate to master** (after work is complete):
+   ```bash
+   # rebase onto latest master
+   git fetch origin
+   git rebase origin/master
+
+   # switch to master and merge
+   cd ../  # go to main directory
+   git checkout master
+   git merge work/backend
+   git push origin master
+   ```
 
 ### commit rules
 
@@ -201,9 +212,10 @@ boundary between backend and frontend:
 
 1. **always start work from latest master branch**
 2. **commit small and frequently** (when user instructs)
-3. **clear commit messages**
-4. **write tests**
-5. **update documentation**
-6. **ask when unclear**
-7. **consider impact of changes**
-8. **communicate with PdM regularly**
+3. **rebase and merge to master after completing work**
+4. **clear commit messages**
+5. **write tests**
+6. **update documentation**
+7. **ask when unclear**
+8. **consider impact of changes**
+9. **communicate with PdM regularly**

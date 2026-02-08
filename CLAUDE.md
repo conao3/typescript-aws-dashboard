@@ -82,6 +82,19 @@ cd worktree-devops
    git push -u origin work/backend
    ```
 
+6. integrate to master (after work is complete):
+   ```bash
+   # rebase onto latest master
+   git fetch origin
+   git rebase origin/master
+
+   # merge to master
+   cd ../
+   git checkout master
+   git merge work/backend
+   git push origin master
+   ```
+
 see [docs/worktree.md](./docs/worktree.md) for complete guide.
 
 ## Development Server Restrictions
