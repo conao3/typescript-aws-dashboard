@@ -16,6 +16,8 @@ type Query {
   hello: String!
   version: String!
   currentUser: User!
+  awsCredentials: [AwsCredential!]!
+  awsCredential(id: ID!): AwsCredential!
 }
 ```
 
@@ -27,6 +29,9 @@ type Mutation {
   logout: Boolean!
   registerTenant(input: RegisterTenantInput!): Tenant!
   createUser(input: CreateUserInput!): User!
+  createAwsCredential(input: CreateAwsCredentialInput!): AwsCredential!
+  updateAwsCredential(id: ID!, input: UpdateAwsCredentialInput!): AwsCredential!
+  deleteAwsCredential(id: ID!): Boolean!
 }
 ```
 
@@ -63,6 +68,27 @@ input CreateUserInput {
   email: String!
   name: String!
   password: String!
+}
+
+type AwsCredential {
+  id: ID!
+  tenantId: ID!
+  name: String!
+  region: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input CreateAwsCredentialInput {
+  name: String!
+  accessKeyId: String!
+  secretAccessKey: String!
+  region: String!
+}
+
+input UpdateAwsCredentialInput {
+  name: String
+  region: String
 }
 
 scalar DateTime
@@ -173,6 +199,81 @@ mutation {
 ```graphql
 mutation {
   logout
+}
+```
+
+### create AWS credential (requires authentication)
+
+```graphql
+mutation {
+  createAwsCredential(input: {
+    name: "Production Account"
+    accessKeyId: "AKIAIOSFODNN7EXAMPLE"
+    secretAccessKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+    region: "us-east-1"
+  }) {
+    id
+    name
+    region
+    createdAt
+  }
+}
+```
+
+note: credentials are encrypted before storage and never returned in query responses.
+
+### list AWS credentials (requires authentication)
+
+```graphql
+query {
+  awsCredentials {
+    id
+    name
+    region
+    createdAt
+    updatedAt
+  }
+}
+```
+
+### get AWS credential (requires authentication)
+
+```graphql
+query {
+  awsCredential(id: "uuid-here") {
+    id
+    name
+    region
+    createdAt
+    updatedAt
+  }
+}
+```
+
+### update AWS credential (requires authentication)
+
+```graphql
+mutation {
+  updateAwsCredential(
+    id: "uuid-here"
+    input: {
+      name: "Production Account (Updated)"
+      region: "ap-northeast-1"
+    }
+  ) {
+    id
+    name
+    region
+    updatedAt
+  }
+}
+```
+
+### delete AWS credential (requires authentication)
+
+```graphql
+mutation {
+  deleteAwsCredential(id: "uuid-here")
 }
 ```
 

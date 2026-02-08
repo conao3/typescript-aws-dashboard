@@ -11,14 +11,6 @@ this document tracks current tasks for the typescript-aws-dashboard project.
 
 ## Backend Tasks
 
-### 🔴 implement AWS credentials management
-
-- **assigned to**: backend lead
-- **priority**: high
-- **description**: implement CRUD operations for AWS credentials with encryption
-- **dependencies**: tenant context middleware, authentication
-- **notes**: encrypt access_key_id and secret_access_key before storing
-
 ### 🔴 integrate AWS SDK for EC2
 
 - **assigned to**: backend lead
@@ -135,6 +127,24 @@ this document tracks current tasks for the typescript-aws-dashboard project.
   - added deployment section to README.md with setup instructions
   - added docker commands to Makefile: docker-build, docker-up, docker-down, docker-logs
   - added `.env` to .gitignore to prevent committing secrets
+
+### 🟢 implement AWS credentials management (2026-02-08)
+
+- **assigned to**: backend lead
+- **priority**: high
+- **description**: implement CRUD operations for AWS credentials with encryption
+- **implementation**:
+  - created `backend/src/crypto.rs` with AES-256-GCM encryption/decryption
+  - added dependencies: aes-gcm 0.10, base64 0.22, rand 0.8, hex 0.4
+  - implemented CryptoConfig with encrypt/decrypt methods using ENCRYPTION_KEY environment variable
+  - created AwsCredential and AwsCredentialRow models in `backend/src/models.rs`
+  - added Input types: CreateAwsCredentialInput, UpdateAwsCredentialInput
+  - implemented awsCredentials and awsCredential queries for listing and retrieving credentials
+  - implemented createAwsCredential mutation with automatic encryption of access keys
+  - implemented updateAwsCredential mutation for name and region updates (keys cannot be updated)
+  - implemented deleteAwsCredential mutation with tenant isolation
+  - credentials are encrypted before storage and never exposed in API responses
+  - updated docs/api.md with complete AWS credentials schema and usage examples
 
 ### 🟢 setup initial GraphQL schema (2026-02-08)
 
