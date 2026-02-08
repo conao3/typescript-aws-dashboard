@@ -7,7 +7,7 @@ this document describes the overall architecture of the typescript-aws-dashboard
 ```
 ┌─────────────────────────────────────────────────────┐
 │                    Frontend                         │
-│            (TypeScript / Nuxt.js)                   │
+│          (TypeScript / TanStack Start)              │
 │                Port: 17232                          │
 └────────────────┬────────────────────────────────────┘
                  │ GraphQL Queries/Mutations
@@ -56,19 +56,31 @@ see [api.md](./api.md) for schema details.
 ### tech stack
 
 - **language**: TypeScript
-- **framework**: Nuxt.js
+- **framework**: TanStack Start (with TanStack Router)
+- **styling**: Tailwind CSS v4
+- **UI components**: React Aria Components
+- **state management**: React Stately
+- **GraphQL client**: Apollo Client
 - **package manager**: pnpm
-- **Node.js**: (to be confirmed)
+- **Node.js**: v22
 
 ### directory structure
 
 ```
 frontend/
 ├── package.json
-├── nuxt.config.ts
-└── app/
-    ├── server.tsx
-    └── ssr.tsx
+├── vite.config.ts
+├── tsconfig.json
+├── tailwind.config.ts
+├── postcss.config.js
+├── public/
+└── src/
+    ├── router.tsx
+    ├── routes/
+    ├── components/
+    ├── lib/
+    │   └── apollo.ts
+    └── styles.css
 ```
 
 ### responsibilities

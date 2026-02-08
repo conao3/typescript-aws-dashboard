@@ -53,7 +53,7 @@ edit Rust code in `backend/src/`.
 
 ```bash
 # build only
-nix develop -c cargo build --manifest-path backend/Cargo.toml
+cargo build --manifest-path backend/Cargo.toml
 
 # run tests
 make test
@@ -74,13 +74,13 @@ the frontend server is already running at:
 
 #### modify code
 
-edit TypeScript code in `frontend/app/`.
+edit TypeScript code in `frontend/src/`.
 
 #### build and test
 
 ```bash
 # build only
-nix develop -c pnpm build -C frontend
+pnpm -C frontend build
 
 # run tests
 make test
@@ -170,13 +170,13 @@ gh pr create --title "title" --body "description"
 ### backend tests
 
 ```bash
-nix develop -c cargo test --manifest-path backend/Cargo.toml
+cargo test --manifest-path backend/Cargo.toml
 ```
 
 ### frontend tests
 
 ```bash
-nix develop -c pnpm test -C frontend
+pnpm -C frontend test
 ```
 
 ### run all tests
