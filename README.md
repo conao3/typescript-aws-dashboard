@@ -17,7 +17,7 @@ Start backend server:
 make dev-backend
 ```
 
-GraphiQL IDE: http://localhost:17231
+GraphiQL IDE: http://localhost:17231/admin/graphiql
 
 Start frontend development server:
 
