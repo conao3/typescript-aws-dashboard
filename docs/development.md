@@ -32,16 +32,17 @@ this installs frontend dependencies (pnpm install).
 
 ## Development Flow
 
+**IMPORTANT**: the user runs backend and frontend servers in watch mode. Claude Code instances should NEVER start these servers.
+
 ### Backend Development
 
-#### start development server
+#### development server
 
-```bash
-make dev-backend
-```
-
+the backend server is already running at:
 - server: http://localhost:17231
 - GraphiQL IDE: http://localhost:17231/admin/graphiql
+
+**do NOT execute** `make dev-backend` - the server is already running and will auto-reload on code changes.
 
 #### modify code
 
@@ -62,13 +63,12 @@ make lint
 
 ### Frontend Development
 
-#### start development server
+#### development server
 
-```bash
-make dev
-```
-
+the frontend server is already running at:
 - frontend: http://localhost:17232
+
+**do NOT execute** `make dev` - the server is already running and will auto-reload on code changes.
 
 #### modify code
 
@@ -121,9 +121,9 @@ make fmt         # format code
 make lint        # run lint
 make check       # check Nix flake
 make clean       # clean build artifacts
-make dev         # start frontend dev server
-make dev-backend # start backend dev server
 ```
+
+note: `make dev` and `make dev-backend` are available but should NOT be used by Claude Code instances as servers are already running in watch mode.
 
 ### Makefile rules
 
@@ -209,10 +209,12 @@ make lint
 on NixOS, prefix with `steam-run`:
 
 ```bash
-steam-run make dev
+steam-run make build
 ```
 
 however, do not write `steam-run` in Makefile.
+
+note: Claude Code instances should not start development servers as they are already running.
 
 ### dependency errors
 
@@ -248,22 +250,12 @@ during backend development, use GraphiQL IDE (http://localhost:17231/admin/graph
 
 ### hot reload
 
-both development servers support hot reload:
+both development servers support hot reload and are already running in watch mode:
 
-- backend: auto-restart on code changes (to be confirmed)
+- backend: auto-restart on code changes
 - frontend: auto-reload on code changes
 
-### concurrent development
-
-start both servers in different terminals for concurrent development:
-
-```bash
-# terminal 1
-make dev-backend
-
-# terminal 2
-make dev
-```
+Claude Code instances should only modify code files. the servers will automatically detect changes and reload.
 
 ## Reference Resources
 

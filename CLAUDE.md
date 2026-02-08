@@ -7,6 +7,7 @@ this file contains project-specific instructions for Claude Code instances worki
 before starting any work, read the project documentation in [docs/README.md](./docs/README.md).
 
 key documents:
+
 - [docs/coordination.md](./docs/coordination.md) - coordination guidelines for multiple Claude Code instances
 - [docs/architecture.md](./docs/architecture.md) - system architecture
 - [docs/development.md](./docs/development.md) - development workflow
@@ -15,6 +16,7 @@ key documents:
 ## Role-Based Work
 
 this project uses role-based collaboration:
+
 - **backend lead**: responsible for Rust backend code
 - **frontend lead**: responsible for TypeScript frontend code
 - **devops lead**: responsible for infrastructure and integration
@@ -24,10 +26,26 @@ check your assigned role in [docs/coordination.md](./docs/coordination.md) befor
 ## Communication
 
 all task assignments and coordination go through the PdM (product manager). always communicate with PdM about:
+
 - task selection
 - progress updates
 - blockers
 - major design decisions
+
+## Development Server Restrictions
+
+**IMPORTANT**: do NOT start backend or frontend development servers. the user is already running them in watch mode:
+
+- backend server (port 17231) is already running
+- frontend server (port 17232) is already running
+
+Claude Code instances should never execute:
+
+- `make dev-backend`
+- `make dev`
+- any command that starts these servers
+
+the servers automatically reload when you make code changes.
 
 ## Getting Started
 
