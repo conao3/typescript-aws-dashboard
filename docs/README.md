@@ -6,6 +6,12 @@ this directory contains documentation for the typescript-aws-dashboard project.
 
 ### Project Management
 
+- **[requirements.md](./requirements.md)** - project requirements and scope
+  - project overview and goals
+  - target users and features
+  - technical requirements
+  - development phases
+
 - **[coordination.md](./coordination.md)** - guidelines for multiple Claude Code instances to work together
   - role assignments (backend/frontend/devops)
   - git workflow
@@ -81,9 +87,13 @@ documentation must be kept up to date.
 
 ### update responsibility
 
+- **requirements.md**: PdM only
 - **coordination.md**: devops lead or PdM
-- **architecture.md**: component owner
+- **tasks.md**: all (for task status updates), devops lead or PdM (for structure changes)
+- **architecture.md**: component owner (backend/frontend lead for their sections)
 - **development.md**: devops lead
+- **database.md**: backend lead
+- **multi-tenancy.md**: backend lead
 - **api.md**: backend lead
 
 ## Feedback

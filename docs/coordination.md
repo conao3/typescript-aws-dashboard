@@ -92,6 +92,31 @@ main (protected branch)
 - check changes with `git diff --cached` before committing
 - report commit message to user
 
+### commit scope (CRITICAL)
+
+**only commit changes within your responsibility area**:
+
+- **backend lead**: only commit files in `backend/` directory
+- **frontend lead**: only commit files in `frontend/` directory
+- **devops lead**: only commit root-level config files (Makefile, docker-compose.yml, .github/, etc.)
+
+**do NOT commit**:
+- changes made by other Claude Code instances
+- files outside your responsibility area
+- documentation maintained by other roles
+
+**documentation ownership**:
+- coordination.md: devops lead or PdM
+- tasks.md: devops lead or PdM (but all can update task status)
+- architecture.md: component owner (backend/frontend lead for their sections)
+- development.md: devops lead
+- database.md: backend lead
+- multi-tenancy.md: backend lead
+- api.md: backend lead
+- requirements.md: PdM only
+
+when updating task status in tasks.md, only commit that specific change.
+
 ## Information Sharing
 
 ### using diary skill

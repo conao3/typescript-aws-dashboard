@@ -11,14 +11,6 @@ this document tracks current tasks for the typescript-aws-dashboard project.
 
 ## Backend Tasks
 
-### 🔴 setup sqldef for schema management
-
-- **assigned to**: backend lead
-- **priority**: high
-- **description**: install psqldef and create initial schema.sql file structure
-- **dependencies**: database connection
-- **notes**: use sqldef for declarative schema management
-
 ### 🔴 create initial schema with multi-tenancy
 
 - **assigned to**: backend lead
@@ -51,10 +43,42 @@ this document tracks current tasks for the typescript-aws-dashboard project.
 - **dependencies**: tenant context middleware
 - **notes**:
 
+### 🔴 implement AWS credentials management
+
+- **assigned to**: backend lead
+- **priority**: high
+- **description**: implement CRUD operations for AWS credentials with encryption
+- **dependencies**: tenant context middleware, authentication
+- **notes**: encrypt access_key_id and secret_access_key before storing
+
+### 🔴 integrate AWS SDK for EC2
+
+- **assigned to**: backend lead
+- **priority**: high
+- **description**: integrate AWS SDK for Rust, implement EC2 client with tenant credentials
+- **dependencies**: AWS credentials management
+- **notes**: use tenant's AWS credentials to make API calls
+
+### 🔴 implement EC2 AMI import task sync
+
+- **assigned to**: backend lead
+- **priority**: high
+- **description**: implement sync functionality to fetch AMI import tasks from AWS API
+- **dependencies**: AWS SDK integration
+- **notes**: use DescribeImportImageTasks API
+
+### 🔴 implement EC2 GraphQL schema
+
+- **assigned to**: backend lead
+- **priority**: high
+- **description**: define GraphQL schema for EC2 AMI import tasks queries and mutations
+- **dependencies**: EC2 AMI import task sync
+- **notes**: include filtering and pagination
+
 ### 🔴 implement health check endpoint
 
 - **assigned to**: backend lead
-- **priority**: medium
+- **priority**: low
 - **description**: add health check endpoint for monitoring
 - **dependencies**: none
 - **notes**:
@@ -92,6 +116,30 @@ this document tracks current tasks for the typescript-aws-dashboard project.
 - **description**: implement header, sidebar, and main layout components with React Aria Components
 - **dependencies**: none
 - **notes**:
+
+### 🔴 implement AWS credentials UI
+
+- **assigned to**: frontend lead
+- **priority**: high
+- **description**: create UI for managing AWS credentials (add, edit, delete)
+- **dependencies**: authentication UI
+- **notes**: never display secret keys after initial creation
+
+### 🔴 implement EC2 AMI import list view
+
+- **assigned to**: frontend lead
+- **priority**: high
+- **description**: create list view for EC2 AMI import tasks with filtering and search
+- **dependencies**: Apollo Client setup
+- **notes**: use React Aria Components Table
+
+### 🔴 implement EC2 AMI import detail view
+
+- **assigned to**: frontend lead
+- **priority**: high
+- **description**: create detail view showing full import task information
+- **dependencies**: EC2 AMI import list view
+- **notes**: display all AWS API response fields
 
 ### 🔴 implement tenant context display
 
@@ -132,6 +180,18 @@ this document tracks current tasks for the typescript-aws-dashboard project.
   - integrated pool into actix-web application state
   - added `/health` endpoint for database connectivity check
   - pool configuration: max 5 connections, DATABASE_URL environment variable support
+
+### 🟢 setup sqldef for schema management (2026-02-08)
+
+- **assigned to**: backend lead
+- **priority**: high
+- **description**: install psqldef and create initial schema.sql file structure
+- **implementation**:
+  - added sqldef and postgresql to flake.nix development environment
+  - created `backend/schema.sql` with dashboard schema and tenants table
+  - added `make db-migrate-dry` for schema change preview
+  - added `make db-migrate` for schema application
+  - successfully applied initial schema with tenants table, indexes, and constraints
 
 ---
 

@@ -42,12 +42,14 @@ this is a **multi-tenant application** where multiple organizations can use the 
 **row-level isolation**: all tenants share the same database and tables, with data isolated by `tenant_id` column.
 
 benefits:
+
 - simple to implement and maintain
 - cost-effective (single database)
 - easy to add new tenants
 - efficient resource usage
 
 trade-offs:
+
 - requires careful implementation to prevent data leaks
 - all tenants share same database performance characteristics
 
@@ -56,6 +58,7 @@ trade-offs:
 **authentication token-based**: tenant context is included in JWT token after authentication.
 
 flow:
+
 1. user logs in with credentials
 2. backend validates credentials and determines tenant
 3. JWT token includes `tenant_id` claim

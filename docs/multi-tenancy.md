@@ -5,6 +5,7 @@ this document provides detailed guidelines for implementing multi-tenancy in thi
 ## Overview
 
 this application uses **row-level isolation** for multi-tenancy:
+
 - single database for all tenants
 - data isolated by `tenant_id` column
 - tenant identification via JWT token
@@ -16,6 +17,7 @@ this application uses **row-level isolation** for multi-tenancy:
 this project uses [sqldef](https://github.com/sqldef/sqldef) for database schema management.
 
 sqldef is a declarative schema management tool:
+
 - define desired schema in `schema.sql`
 - sqldef calculates diff and applies changes
 - idempotent and safe migrations
@@ -37,6 +39,7 @@ create table dashboard.tenants (
 ### tenant-specific tables
 
 all tables that contain tenant-specific data must:
+
 1. include `tenant_id uuid not null` column
 2. have foreign key to `tenants(id)`
 3. have index on `tenant_id`
@@ -99,6 +102,7 @@ pub struct TenantContext {
 ### middleware
 
 create middleware to:
+
 1. extract JWT from Authorization header
 2. validate JWT signature
 3. extract `tenant_id` and `user_id` from claims
@@ -150,6 +154,7 @@ impl UserRepository {
 ### token storage
 
 store JWT token in:
+
 - **httpOnly cookie** (recommended for security)
 - or localStorage (simpler but less secure)
 
@@ -158,12 +163,12 @@ store JWT token in:
 ```typescript
 // example using urql
 const client = createClient({
-  url: 'http://localhost:17231/graphql',
+  url: "http://localhost:17231/graphql",
   fetchOptions: () => {
     const token = getToken();
     return {
       headers: {
-        authorization: token ? `Bearer ${token}` : '',
+        authorization: token ? `Bearer ${token}` : "",
       },
     };
   },
@@ -173,6 +178,7 @@ const client = createClient({
 ### authentication state
 
 manage authentication state:
+
 - current user information
 - current tenant information
 - token validity
@@ -190,6 +196,7 @@ manage authentication state:
 ### middleware enforcement
 
 create a middleware that:
+
 - runs before all GraphQL resolvers
 - automatically injects tenant context
 - prevents queries without tenant context
@@ -197,6 +204,7 @@ create a middleware that:
 ### testing
 
 write tests to verify:
+
 - users cannot access other tenants' data
 - tenant isolation is maintained
 - authentication is required for all operations
@@ -206,11 +214,13 @@ write tests to verify:
 ### super admin
 
 create separate admin role for cross-tenant operations:
+
 - tenant management (create, update, delete)
 - user management across tenants
 - system monitoring
 
 admin endpoints should:
+
 - use separate authentication
 - not require tenant_id in JWT
 - explicitly handle tenant selection
@@ -328,6 +338,7 @@ test individual components with mock tenant context.
 ### integration tests
 
 test full flow with multiple tenants:
+
 1. create test tenants
 2. create test users for each tenant
 3. verify data isolation

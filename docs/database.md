@@ -19,6 +19,7 @@ this project uses [sqldef](https://github.com/sqldef/sqldef) for declarative sch
 ### what is sqldef?
 
 sqldef is a tool that manages database schemas declaratively:
+
 - define the desired schema state in a single SQL file
 - sqldef calculates the diff between current and desired state
 - automatically generates and applies migration SQL
@@ -97,6 +98,7 @@ create index idx_tenants_slug on dashboard.tenants(slug);
 ## Multi-Tenancy Schema
 
 all tenant-specific tables must include:
+
 - `tenant_id uuid not null` column
 - foreign key to `dashboard.tenants(id)`
 - index on `tenant_id`
@@ -221,6 +223,7 @@ psql -U dashboard -h localhost dashboard < backend/seed.sql
 ### indexes
 
 create indexes for:
+
 - foreign keys (especially `tenant_id`)
 - columns used in WHERE clauses
 - columns used in JOIN conditions
@@ -229,6 +232,7 @@ create indexes for:
 ### data types
 
 prefer:
+
 - `uuid` for IDs
 - `text` for strings (not varchar)
 - `timestamptz` for timestamps (not timestamp)
@@ -240,6 +244,7 @@ prefer:
 ### sqldef shows unexpected changes
 
 check:
+
 1. schema.sql syntax is correct
 2. database connection is to the correct database
 3. no manual changes were made to the database
@@ -247,6 +252,7 @@ check:
 ### connection refused
 
 check:
+
 1. PostgreSQL container is running
 2. port 5432 is accessible
 3. credentials are correct
@@ -254,6 +260,7 @@ check:
 ### permission denied
 
 check:
+
 1. user has correct permissions
 2. schema ownership is correct
 

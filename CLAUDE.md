@@ -8,6 +8,7 @@ before starting any work, read the project documentation in [docs/README.md](./d
 
 key documents:
 
+- [docs/requirements.md](./docs/requirements.md) - project requirements and scope (READ THIS FIRST)
 - [docs/coordination.md](./docs/coordination.md) - coordination guidelines for multiple Claude Code instances
 - [docs/tasks.md](./docs/tasks.md) - current task tracking and assignments
 - [docs/architecture.md](./docs/architecture.md) - system architecture and multi-tenancy design
@@ -49,6 +50,58 @@ Claude Code instances should never execute:
 - any command that starts these servers
 
 the servers automatically reload when you make code changes.
+
+## Commit Policy
+
+**CRITICAL**: only commit changes related to your role and assigned tasks.
+
+### what to commit
+
+each Claude Code instance should ONLY commit:
+- files within their responsibility area:
+  - **backend lead**: `backend/` directory files
+  - **frontend lead**: `frontend/` directory files
+  - **devops lead**: root-level configuration files (Makefile, docker-compose.yml, CI/CD configs)
+- documentation updates that you created or are assigned to maintain
+
+### what NOT to commit
+
+DO NOT commit:
+- changes made by other Claude Code instances
+- changes outside your responsibility area
+- documentation created/maintained by other roles (check docs/README.md for ownership)
+- temporary files or build artifacts
+- configuration changes you didn't make
+
+### before committing
+
+1. run `git status` to see all changes
+2. run `git diff` to review each change
+3. only stage files (`git add`) that are within your responsibility
+4. verify staged changes with `git diff --cached`
+5. create commit only when instructed by user
+
+### example workflow
+
+```bash
+# 1. check all changes
+git status
+
+# 2. only add your files
+git add backend/src/auth.rs backend/src/middleware.rs
+
+# 3. verify staged changes
+git diff --cached
+
+# 4. wait for user instruction to commit
+```
+
+### when in doubt
+
+if unsure whether a file should be committed:
+- check if it's in your responsibility area (see docs/coordination.md)
+- ask PdM before committing
+- prefer to commit less rather than more
 
 ## Getting Started
 
