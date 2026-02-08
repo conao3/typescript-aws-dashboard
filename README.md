@@ -50,3 +50,12 @@ make fmt
 ```bash
 make lint
 ```
+
+## Documentation
+
+For detailed documentation, see the [docs](./docs) directory:
+
+- [Claude Code Coordination Guide](./docs/coordination.md) - guidelines for multiple Claude Code instances
+- [Architecture](./docs/architecture.md) - system architecture
+- [Development Guide](./docs/development.md) - development environment and workflow
+- [API Specification](./docs/api.md) - GraphQL API specification
