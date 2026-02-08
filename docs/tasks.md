@@ -127,6 +127,10 @@ this document tracks current tasks for the typescript-aws-dashboard project.
   - added deployment section to README.md with setup instructions
   - added docker commands to Makefile: docker-build, docker-up, docker-down, docker-logs
   - added `.env` to .gitignore to prevent committing secrets
+  - improved backend Dockerfile: added postgresql-client and psqldef for automated schema migration
+  - created `backend/docker-entrypoint.sh` to automate database schema application on container startup
+  - backend container now automatically waits for postgres and applies schema before starting server
+  - updated README.md to reflect automated schema migration (no manual steps needed)
 
 ### 🟢 implement AWS credentials management (2026-02-08)
 
