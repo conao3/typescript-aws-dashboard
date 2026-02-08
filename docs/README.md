@@ -37,6 +37,12 @@ this directory contains documentation for the typescript-aws-dashboard project.
   - type definitions
   - usage examples
 
+- **[multi-tenancy.md](./multi-tenancy.md)** - multi-tenancy implementation guide
+  - design overview
+  - database schema
+  - authentication flow
+  - security best practices
+
 ## How to Read the Documentation
 
 ### for new project members
