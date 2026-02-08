@@ -20,6 +20,7 @@ services:
       dockerfile: Dockerfile
     environment:
       DATABASE_URL: postgres://dashboard:${POSTGRES_PASSWORD:-dashboard}@postgres:5432/dashboard
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dashboard}
       RUST_LOG: ${RUST_LOG:-info}
       JWT_SECRET: ${JWT_SECRET}
     ports:
