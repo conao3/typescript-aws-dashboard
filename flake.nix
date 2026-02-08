@@ -47,6 +47,8 @@
               gnumake
               docker
               docker-compose
+              sqldef
+              postgresql
               rustc
               cargo
               cargo-watch

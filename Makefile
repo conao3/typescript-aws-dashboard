@@ -68,3 +68,11 @@ db-logs: ## show postgres logs
 db-reset: ## reset postgres database
 	docker compose down -v
 	docker compose up -d
+
+.PHONY: db-migrate-dry
+db-migrate-dry: ## preview database schema changes
+	PGPASSWORD=dashboard psqldef -U dashboard -h localhost dashboard --file=backend/schema.sql --dry-run
+
+.PHONY: db-migrate
+db-migrate: ## apply database schema changes
+	PGPASSWORD=dashboard psqldef -U dashboard -h localhost dashboard --file=backend/schema.sql
