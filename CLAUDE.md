@@ -58,6 +58,7 @@ the servers automatically reload when you make code changes.
 ### what to commit
 
 each Claude Code instance should ONLY commit:
+
 - files within their responsibility area:
   - **backend lead**: `backend/` directory files
   - **frontend lead**: `frontend/` directory files
@@ -67,6 +68,7 @@ each Claude Code instance should ONLY commit:
 ### what NOT to commit
 
 DO NOT commit:
+
 - changes made by other Claude Code instances
 - changes outside your responsibility area
 - documentation created/maintained by other roles (check docs/README.md for ownership)
@@ -99,6 +101,7 @@ git diff --cached
 ### when in doubt
 
 if unsure whether a file should be committed:
+
 - check if it's in your responsibility area (see docs/coordination.md)
 - ask PdM before committing
 - prefer to commit less rather than more

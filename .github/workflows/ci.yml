@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: dashboard
+          POSTGRES_PASSWORD: dashboard
+          POSTGRES_DB: dashboard
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: install nix
+        uses: cachix/install-nix-action@v30
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: setup nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@v8
+
+      - name: check nix flake
+        run: nix flake check
+
+      - name: install dependencies
+        run: nix develop --command make setup
+
+      - name: check formatting
+        run: nix develop --command nix fmt -- --ci .
+
+      - name: run lint
+        run: nix develop --command make lint
+
+      - name: build project
+        run: nix develop --command make build
+
+      - name: run tests
+        run: nix develop --command make test

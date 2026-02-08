@@ -127,14 +127,6 @@ this document tracks current tasks for the typescript-aws-dashboard project.
 
 ## DevOps Tasks
 
-### 🟡 setup CI/CD pipeline
-
-- **assigned to**: devops lead
-- **priority**: medium
-- **description**: configure GitHub Actions for testing and building
-- **dependencies**: none
-- **notes**: started 2026-02-08
-
 ### 🔴 add Docker configuration
 
 - **assigned to**: devops lead
@@ -144,6 +136,21 @@ this document tracks current tasks for the typescript-aws-dashboard project.
 - **notes**:
 
 ## Completed Tasks
+
+### 🟢 setup CI/CD pipeline (2026-02-08)
+
+- **assigned to**: devops lead
+- **priority**: medium
+- **description**: configure GitHub Actions for testing and building
+- **implementation**:
+  - created `.github/workflows/ci.yml` with GitHub Actions workflow
+  - configured Nix environment setup with cachix/install-nix-action@v30
+  - added DeterminateSystems/magic-nix-cache-action for faster builds
+  - workflow runs on push to main/master and pull requests
+  - steps include: nix flake check, dependency installation, formatting check, lint, build, and tests
+  - added PostgreSQL 17 service container for future database tests
+  - added `lint` script to frontend/package.json (tsc --noEmit)
+  - CI runs in Nix development environment for consistency with local development
 
 ### 🟢 implement tenant context middleware (2026-02-08)
 

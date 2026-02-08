@@ -7,7 +7,8 @@
     "dev": "vite dev --port 17232",
     "build": "vite build",
     "preview": "vite preview --port 17232",
-    "test": "vitest run"
+    "test": "vitest run",
+    "lint": "tsc --noEmit"
   },
   "dependencies": {
     "@tanstack/react-devtools": "^0.7.0",

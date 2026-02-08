@@ -101,11 +101,13 @@ main (protected branch)
 - **devops lead**: only commit root-level config files (Makefile, docker-compose.yml, .github/, etc.)
 
 **do NOT commit**:
+
 - changes made by other Claude Code instances
 - files outside your responsibility area
 - documentation maintained by other roles
 
 **documentation ownership**:
+
 - coordination.md: devops lead or PdM
 - tasks.md: devops lead or PdM (but all can update task status)
 - architecture.md: component owner (backend/frontend lead for their sections)
