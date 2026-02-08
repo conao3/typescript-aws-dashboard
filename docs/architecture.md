@@ -4,28 +4,84 @@ this document describes the overall architecture of the typescript-aws-dashboard
 
 ## System Overview
 
+this is a **multi-tenant application** where multiple organizations can use the same system with isolated data.
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │                    Frontend                         │
 │          (TypeScript / TanStack Start)              │
 │                Port: 17232                          │
+│         (includes tenant identification)            │
 └────────────────┬────────────────────────────────────┘
                  │ GraphQL Queries/Mutations
+                 │ (with tenant context)
                  │
 ┌────────────────▼────────────────────────────────────┐
 │                    Backend                          │
 │              (Rust / async-graphql)                 │
 │                Port: 17231                          │
 │          GraphiQL: /admin/graphiql                  │
+│         (tenant-aware data access)                  │
 └────────────────┬────────────────────────────────────┘
-                 │ SQL Queries
+                 │ SQL Queries (with tenant_id filter)
                  │
 ┌────────────────▼────────────────────────────────────┐
 │                   PostgreSQL                        │
 │                Port: 5432                           │
 │               Schema: dashboard                     │
+│         (row-level tenant isolation)                │
 └─────────────────────────────────────────────────────┘
 ```
+
+## Multi-Tenancy Design
+
+### tenant isolation strategy
+
+**row-level isolation**: all tenants share the same database and tables, with data isolated by `tenant_id` column.
+
+benefits:
+- simple to implement and maintain
+- cost-effective (single database)
+- easy to add new tenants
+- efficient resource usage
+
+trade-offs:
+- requires careful implementation to prevent data leaks
+- all tenants share same database performance characteristics
+
+### tenant identification
+
+**authentication token-based**: tenant context is included in JWT token after authentication.
+
+flow:
+1. user logs in with credentials
+2. backend validates credentials and determines tenant
+3. JWT token includes `tenant_id` claim
+4. all subsequent requests use this token
+5. backend extracts `tenant_id` from token and filters data
+
+### data model pattern
+
+all tenant-specific tables include `tenant_id`:
+
+```sql
+create table dashboard.users (
+  id uuid primary key,
+  tenant_id uuid not null,
+  email text not null,
+  name text not null,
+  created_at timestamptz not null
+);
+
+create index idx_users_tenant on dashboard.users(tenant_id);
+```
+
+### security considerations
+
+- **query filtering**: all database queries must filter by `tenant_id`
+- **middleware enforcement**: use actix-web middleware to automatically inject tenant context
+- **no cross-tenant access**: users cannot access data from other tenants
+- **admin operations**: separate admin role for cross-tenant management
 
 ## Backend
 
@@ -50,14 +106,17 @@ backend/
 
 - provide GraphQL API endpoints
 - implement business logic
-- data persistence (database connection, depending on implementation)
-- authentication and authorization (depending on implementation)
+- data persistence with PostgreSQL
+- authentication and authorization with JWT
+- tenant context management with actix-web middleware
+- ensure data isolation between tenants
 
 ### GraphQL API
 
 GraphiQL IDE is accessible at http://localhost:17231/admin/graphiql
 
 see [api.md](./api.md) for schema details.
+see [multi-tenancy.md](./multi-tenancy.md) for tenant implementation details.
 
 ## Database
 
@@ -107,11 +166,13 @@ frontend/
 
 ### responsibilities
 
-- implement UI components
-- implement GraphQL client
-- routing
-- state management
-- SSR (Server-Side Rendering)
+- implement UI components with React Aria Components
+- implement GraphQL client (Apollo Client) with authentication
+- routing with TanStack Router
+- state management with React Stately including tenant context
+- SSR (Server-Side Rendering) with TanStack Start
+- handle authentication flow
+- store and manage JWT tokens
 
 ## Development Environment
 
@@ -146,30 +207,48 @@ builds release binaries and frontend assets.
 
 ## Security Considerations
 
-- [ ] authentication and authorization implementation status
+- [ ] authentication and authorization with JWT
+- [ ] tenant context validation
 - [ ] CORS configuration
 - [ ] GraphQL query depth limits
-- [ ] rate limiting
+- [ ] rate limiting per tenant
 - [ ] input validation
+- [ ] SQL injection prevention
+- [ ] cross-tenant access prevention
 
 ## Performance Considerations
 
 - [ ] GraphQL N+1 problem mitigation (DataLoader, etc.)
-- [ ] caching strategy
+- [ ] caching strategy per tenant
 - [ ] SSR performance optimization
 - [ ] backend asynchronous processing
+- [ ] database connection pooling
+- [ ] tenant_id index optimization
 
 ## Monitoring and Logging
 
 - [ ] log collection
-- [ ] metrics collection
+- [ ] metrics collection per tenant
 - [ ] error tracking
 - [ ] performance monitoring
+- [ ] tenant usage tracking
+
+## Multi-Tenancy Implementation Checklist
+
+- [ ] database schema with tenant_id columns
+- [ ] database migrations system
+- [ ] authentication system with JWT
+- [ ] tenant context middleware for actix-web
+- [ ] GraphQL context with tenant information
+- [ ] row-level security enforcement
+- [ ] tenant registration/management
+- [ ] admin panel for cross-tenant operations
 
 ## Future Enhancements
 
-- [ ] database integration
-- [ ] authentication system
 - [ ] AWS integration (inferred from project name)
 - [ ] CI/CD pipeline
-- [ ] containerization (Docker)
+- [ ] tenant-specific customization
+- [ ] usage metrics per tenant
+- [ ] tenant usage limits and quotas
+- [ ] database backup strategy per tenant
