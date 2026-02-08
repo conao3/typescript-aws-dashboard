@@ -76,3 +76,19 @@ db-migrate-dry: ## preview database schema changes
 .PHONY: db-migrate
 db-migrate: ## apply database schema changes
 	PGPASSWORD=dashboard psqldef -U dashboard -h localhost dashboard --file=backend/schema.sql
+
+.PHONY: docker-build
+docker-build: ## build docker images for production
+	docker compose -f docker-compose.prod.yml build
+
+.PHONY: docker-up
+docker-up: ## start production services with docker compose
+	docker compose -f docker-compose.prod.yml up -d
+
+.PHONY: docker-down
+docker-down: ## stop production services
+	docker compose -f docker-compose.prod.yml down
+
+.PHONY: docker-logs
+docker-logs: ## show production services logs
+	docker compose -f docker-compose.prod.yml logs -f

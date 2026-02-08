@@ -87,6 +87,53 @@ make fmt
 make lint
 ```
 
+## Deployment
+
+### using Docker Compose
+
+create `.env` file from template:
+
+```bash
+cp .env.example .env
+```
+
+edit `.env` and set production values, especially:
+
+- `POSTGRES_PASSWORD`: strong password for database
+- `JWT_SECRET`: random secret key for JWT token signing
+
+build and start services:
+
+```bash
+docker compose -f docker-compose.prod.yml up -d
+```
+
+apply database schema:
+
+```bash
+docker compose -f docker-compose.prod.yml exec backend psqldef -U dashboard -h postgres dashboard --file=/app/schema.sql
+```
+
+services will be available at:
+
+- backend: http://localhost:17231
+- frontend: http://localhost:17232
+
+stop services:
+
+```bash
+docker compose -f docker-compose.prod.yml down
+```
+
+### environment variables
+
+required environment variables for production:
+
+- `POSTGRES_PASSWORD`: PostgreSQL password
+- `JWT_SECRET`: secret key for JWT token signing
+- `RUST_LOG`: log level (default: info)
+- `GRAPHQL_URL`: GraphQL endpoint URL (default: http://backend:17231/graphql)
+
 ## Documentation
 
 For detailed documentation, see the [docs](./docs) directory:

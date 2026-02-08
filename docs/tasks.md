@@ -119,15 +119,22 @@ this document tracks current tasks for the typescript-aws-dashboard project.
 
 ## DevOps Tasks
 
-### 🔴 add Docker configuration
+## Completed Tasks
+
+### 🟢 add Docker configuration (2026-02-08)
 
 - **assigned to**: devops lead
 - **priority**: low
 - **description**: create Dockerfile and docker-compose.yml for deployment
-- **dependencies**: none
-- **notes**:
-
-## Completed Tasks
+- **implementation**:
+  - created `backend/Dockerfile` with multi-stage build (Rust 1.83 builder + Debian slim runtime)
+  - created `frontend/Dockerfile` with multi-stage build (Node.js 22 builder + slim runtime)
+  - created `docker-compose.prod.yml` for production deployment with postgres, backend, and frontend services
+  - created `.dockerignore` files for backend and frontend to optimize build context
+  - created `.env.example` with required environment variables template
+  - added deployment section to README.md with setup instructions
+  - added docker commands to Makefile: docker-build, docker-up, docker-down, docker-logs
+  - added `.env` to .gitignore to prevent committing secrets
 
 ### 🟢 setup initial GraphQL schema (2026-02-08)
 
