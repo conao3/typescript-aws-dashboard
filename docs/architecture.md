@@ -17,6 +17,13 @@ this document describes the overall architecture of the typescript-aws-dashboard
 │              (Rust / async-graphql)                 │
 │                Port: 17231                          │
 │          GraphiQL: /admin/graphiql                  │
+└────────────────┬────────────────────────────────────┘
+                 │ SQL Queries
+                 │
+┌────────────────▼────────────────────────────────────┐
+│                   PostgreSQL                        │
+│                Port: 5432                           │
+│               Schema: dashboard                     │
 └─────────────────────────────────────────────────────┘
 ```
 
@@ -26,7 +33,8 @@ this document describes the overall architecture of the typescript-aws-dashboard
 
 - **language**: Rust
 - **GraphQL**: async-graphql
-- **HTTP server**: (to be confirmed)
+- **HTTP server**: actix-web
+- **database**: PostgreSQL 17
 - **build tool**: Cargo
 
 ### directory structure
@@ -50,6 +58,20 @@ backend/
 GraphiQL IDE is accessible at http://localhost:17231/admin/graphiql
 
 see [api.md](./api.md) for schema details.
+
+## Database
+
+### PostgreSQL
+
+- **version**: PostgreSQL 17
+- **host**: localhost
+- **port**: 5432
+- **user**: dashboard
+- **password**: dashboard
+- **database**: dashboard
+- **schema**: dashboard
+
+the database runs in a Docker container managed by docker compose.
 
 ## Frontend
 

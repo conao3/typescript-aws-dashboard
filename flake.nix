@@ -45,6 +45,8 @@
           devShells.default = pkgs.mkShell {
             packages = with pkgs; [
               gnumake
+              docker
+              docker-compose
               rustc
               cargo
               cargo-watch

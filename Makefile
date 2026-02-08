@@ -51,3 +51,20 @@ dev-backend: ## start backend server
 .PHONY: watch
 watch: ## watch and restart backend server on changes
 	cargo watch -x 'run --manifest-path backend/Cargo.toml'
+
+.PHONY: db-up
+db-up: ## start postgres database
+	docker compose up -d
+
+.PHONY: db-down
+db-down: ## stop postgres database
+	docker compose down
+
+.PHONY: db-logs
+db-logs: ## show postgres logs
+	docker compose logs -f postgres
+
+.PHONY: db-reset
+db-reset: ## reset postgres database
+	docker compose down -v
+	docker compose up -d

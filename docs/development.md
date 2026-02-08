@@ -6,6 +6,7 @@ this document describes the project development environment setup and developmen
 
 - Nix (with flakes enabled)
 - Git
+- Docker (for PostgreSQL)
 
 ## Initial Setup
 
@@ -29,6 +30,51 @@ make setup
 ```
 
 this installs frontend dependencies (pnpm install).
+
+### 4. start PostgreSQL
+
+```bash
+make db-up
+```
+
+this starts the PostgreSQL database in a Docker container.
+
+## Database Operations
+
+### start database
+
+```bash
+make db-up
+```
+
+### stop database
+
+```bash
+make db-down
+```
+
+### view logs
+
+```bash
+make db-logs
+```
+
+### reset database
+
+```bash
+make db-reset
+```
+
+this stops the database, removes all data, and starts fresh.
+
+### database connection
+
+- host: localhost
+- port: 5432
+- user: dashboard
+- password: dashboard
+- database: dashboard
+- schema: dashboard
 
 ## Development Flow
 
@@ -123,6 +169,10 @@ make fmt         # format code
 make lint        # run lint
 make check       # check Nix flake
 make clean       # clean build artifacts
+make db-up       # start postgres database
+make db-down     # stop postgres database
+make db-logs     # show postgres logs
+make db-reset    # reset postgres database
 ```
 
 note: `make dev` and `make dev-backend` are available but should NOT be used by Claude Code instances as servers are already running in watch mode.

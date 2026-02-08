@@ -11,6 +11,12 @@ make setup
 
 ## Development
 
+Start PostgreSQL database:
+
+```bash
+make db-up
+```
+
 Start backend server:
 
 ```bash
@@ -26,6 +32,23 @@ make dev
 ```
 
 Frontend: http://localhost:17232
+
+### Database Commands
+
+```bash
+make db-up      # start postgres
+make db-down    # stop postgres
+make db-logs    # show logs
+make db-reset   # reset database
+```
+
+Database connection:
+- Host: localhost
+- Port: 5432
+- User: dashboard
+- Password: dashboard
+- Database: dashboard
+- Schema: dashboard
 
 ## Build
 
