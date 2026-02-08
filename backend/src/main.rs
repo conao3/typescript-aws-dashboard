@@ -1,9 +1,11 @@
 use actix_cors::Cors;
 use actix_web::{App, HttpResponse, HttpServer, Result, guard, web};
-use async_graphql::{EmptyMutation, EmptySubscription, Object, Schema, http::GraphiQLSource};
+use async_graphql::{Context, EmptySubscription, Object, Schema, http::GraphiQLSource};
 use async_graphql_actix_web::{GraphQLRequest, GraphQLResponse};
 
+mod auth;
 mod db;
+mod models;
 
 struct QueryRoot;
 
@@ -18,7 +20,41 @@ impl QueryRoot {
     }
 }
 
-type AppSchema = Schema<QueryRoot, EmptyMutation, EmptySubscription>;
+struct MutationRoot;
+
+#[Object]
+impl MutationRoot {
+    async fn login(&self, ctx: &Context<'_>, email: String, password: String) -> async_graphql::Result<String> {
+        let pool = ctx.data::<sqlx::PgPool>()?;
+        let jwt_config = ctx.data::<auth::JwtConfig>()?;
+
+        let user = sqlx::query_as::<_, models::User>(
+            "SELECT * FROM dashboard.users WHERE email = $1"
+        )
+        .bind(&email)
+        .fetch_optional(pool)
+        .await?
+        .ok_or_else(|| async_graphql::Error::new("invalid credentials"))?;
+
+        if !auth::verify_password(&password, &user.password_hash)? {
+            return Err(async_graphql::Error::new("invalid credentials"));
+        }
+
+        let tenant = sqlx::query_as::<_, models::Tenant>(
+            "SELECT * FROM dashboard.tenants WHERE id = $1 AND is_active = true"
+        )
+        .bind(user.tenant_id)
+        .fetch_optional(pool)
+        .await?
+        .ok_or_else(|| async_graphql::Error::new("tenant not active"))?;
+
+        let token = jwt_config.generate_token(user.id, tenant.id, user.email)?;
+
+        Ok(token)
+    }
+}
+
+type AppSchema = Schema<QueryRoot, MutationRoot, EmptySubscription>;
 
 async fn graphql(schema: web::Data<AppSchema>, req: GraphQLRequest) -> GraphQLResponse {
     schema.execute(req.into_inner()).await.into()
@@ -55,7 +91,12 @@ async fn main() -> std::io::Result<()> {
         .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
     log::info!("database connection pool created");
 
-    let schema = Schema::build(QueryRoot, EmptyMutation, EmptySubscription).finish();
+    let jwt_config = auth::JwtConfig::new();
+
+    let schema = Schema::build(QueryRoot, MutationRoot, EmptySubscription)
+        .data(pool.clone())
+        .data(jwt_config)
+        .finish();
 
     log::info!("GraphiQL IDE: http://localhost:17231/admin/graphiql");
 

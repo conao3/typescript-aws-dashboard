@@ -11,14 +11,6 @@ this document tracks current tasks for the typescript-aws-dashboard project.
 
 ## Backend Tasks
 
-### 🔴 implement JWT authentication
-
-- **assigned to**: backend lead
-- **priority**: high
-- **description**: implement JWT token generation, validation, and tenant_id extraction
-- **dependencies**: none
-- **notes**:
-
 ### 🔴 implement tenant context middleware
 
 - **assigned to**: backend lead
@@ -197,6 +189,20 @@ this document tracks current tasks for the typescript-aws-dashboard project.
   - all tables include tenant_id with foreign key to tenants(id) on delete cascade
   - added tenant_id indexes on all tenant-specific tables
   - added unique constraints: users(tenant_id, email), ec2_ami_import_tasks(tenant_id, import_task_id)
+
+### 🟢 implement JWT authentication (2026-02-08)
+
+- **assigned to**: backend lead
+- **priority**: high
+- **description**: implement JWT token generation, validation, and tenant_id extraction
+- **implementation**:
+  - added jsonwebtoken 9 and bcrypt 0.16 dependencies
+  - created `backend/src/auth.rs` with JwtConfig, Claims, and password hashing utilities
+  - created `backend/src/models.rs` with User and Tenant database models
+  - implemented `login` GraphQL mutation with email/password authentication
+  - JWT includes user_id (sub), tenant_id, email, and expiration (24 hours)
+  - created `backend/seed.sql` with test tenants and users (password: "password")
+  - login mutation validates credentials and returns JWT token
 
 ---
 
