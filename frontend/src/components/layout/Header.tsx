@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Button } from "react-aria-components";
+import { Button, Header, Group, Text } from "react-aria-components";
 import { useAuth } from "../../lib/auth";
 
 export function AppHeader() {
@@ -12,10 +12,10 @@ export function AppHeader() {
   };
 
   return (
-    <header className="bg-white shadow">
+    <Header className="bg-white shadow">
       <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-8">
+        <Group className="flex items-center justify-between">
+          <Group className="flex items-center gap-8">
             <Link to="/" className="text-2xl font-bold text-gray-900">
               AWS Dashboard
             </Link>
@@ -27,11 +27,11 @@ export function AppHeader() {
                 Home
               </Link>
             </nav>
-          </div>
-          <div className="flex items-center gap-4">
+          </Group>
+          <Group className="flex items-center gap-4">
             {isAuthenticated ? (
               <>
-                <span className="text-sm text-gray-700">{user?.email}</span>
+                <Text className="text-sm text-gray-700">{user?.email}</Text>
                 <Button
                   onPress={handleLogout}
                   className="rounded-md bg-gray-600 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-700"
@@ -46,9 +46,9 @@ export function AppHeader() {
                 </Button>
               </Link>
             )}
-          </div>
-        </div>
+          </Group>
+        </Group>
       </div>
-    </header>
+    </Header>
   );
 }
