@@ -12,6 +12,11 @@ this directory contains documentation for the typescript-aws-dashboard project.
   - information sharing methods
   - best practices
 
+- **[tasks.md](./tasks.md)** - current task tracking
+  - task status and assignments
+  - priorities and dependencies
+  - task management workflow
+
 ### Technical Documentation
 
 - **[architecture.md](./architecture.md)** - overall system architecture

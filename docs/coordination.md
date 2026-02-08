@@ -34,6 +34,8 @@ this document provides guidelines for multiple Claude Code instances to collabor
 
 ## Task Management
 
+tasks are tracked in [tasks.md](./tasks.md).
+
 ### communication with PdM
 
 - tasks and priorities are communicated directly by PdM
@@ -43,15 +45,18 @@ this document provides guidelines for multiple Claude Code instances to collabor
 
 ### work selection
 
-1. choose tasks corresponding to your role
+1. check [tasks.md](./tasks.md) for available tasks (🔴 TODO) in your role
 2. verify no other Claude Code instance is working on the same task
-3. communicate with PdM when starting work
-4. report completion to PdM
+3. update task status to 🟡 IN PROGRESS in [tasks.md](./tasks.md)
+4. communicate with PdM when starting work
+5. update task status to 🟢 DONE when completed
+6. report completion to PdM
 
 ### avoiding duplicate work
 
+- check [tasks.md](./tasks.md) for current task assignments (🟡 IN PROGRESS)
+- update [tasks.md](./tasks.md) immediately when starting work
 - announce your work to PdM before starting
-- check with PdM if unsure whether a task is already assigned
 - communicate regularly about progress
 
 ## Git Workflow

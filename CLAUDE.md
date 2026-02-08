@@ -9,6 +9,7 @@ before starting any work, read the project documentation in [docs/README.md](./d
 key documents:
 
 - [docs/coordination.md](./docs/coordination.md) - coordination guidelines for multiple Claude Code instances
+- [docs/tasks.md](./docs/tasks.md) - current task tracking and assignments
 - [docs/architecture.md](./docs/architecture.md) - system architecture
 - [docs/development.md](./docs/development.md) - development workflow
 - [docs/api.md](./docs/api.md) - GraphQL API specification
