@@ -17,13 +17,42 @@ git clone <repository-url>
 cd typescript-aws-dashboard
 ```
 
-### 2. enter Nix development environment
+### 2. setup git worktrees (for Claude Code instances)
+
+**IMPORTANT**: if you are a Claude Code instance, create your worktree:
+
+```bash
+# use setup script (recommended)
+./scripts/setup-worktrees.sh
+
+# or manually:
+# backend lead
+git worktree add -b work/backend worktree-backend main
+
+# frontend lead
+git worktree add -b work/frontend worktree-frontend main
+
+# devops lead
+git worktree add -b work/devops worktree-devops main
+```
+
+then navigate to your worktree:
+
+```bash
+cd worktree-backend  # or worktree-frontend, worktree-devops
+```
+
+**PdM** works in the main directory (no worktree needed).
+
+see [worktree.md](./worktree.md) for complete guide.
+
+### 3. enter Nix development environment
 
 ```bash
 nix develop
 ```
 
-### 3. install dependencies
+### 4. install dependencies
 
 ```bash
 make setup
@@ -31,7 +60,7 @@ make setup
 
 this installs frontend dependencies (pnpm install).
 
-### 4. start PostgreSQL
+### 5. start PostgreSQL
 
 ```bash
 make db-up
@@ -185,13 +214,22 @@ note: `make dev` and `make dev-backend` are available but should NOT be used by 
 
 ## Git Operations
 
+### worktree strategy
+
+**IMPORTANT**: each Claude Code instance uses a separate worktree to avoid staging conflicts.
+
+see [worktree.md](./worktree.md) for complete worktree guide.
+
 ### branching strategy
 
-- `main`: main branch (protected)
-- `feature/*`: feature additions
+- `main`: main branch (protected, PdM)
+- `work/backend`: backend lead persistent branch
+- `work/frontend`: frontend lead persistent branch
+- `work/devops`: devops lead persistent branch
+- `feature/*`: optional feature branches
 - `fix/*`: bug fixes
 
-see [coordination.md](./coordination.md) for details.
+see [coordination.md](./coordination.md) for workflow details.
 
 ### commit
 

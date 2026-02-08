@@ -55,6 +55,12 @@ this directory contains documentation for the typescript-aws-dashboard project.
   - migration workflow
   - common operations
 
+- **[worktree.md](./worktree.md)** - git worktree guide for Claude Code instances
+  - worktree setup and workflow
+  - avoiding staging conflicts
+  - troubleshooting
+  - best practices
+
 ## How to Read the Documentation
 
 ### for new project members

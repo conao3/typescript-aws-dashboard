@@ -61,29 +61,60 @@ tasks are tracked in [tasks.md](./tasks.md).
 
 ## Git Workflow
 
-### branching strategy
+### git worktree strategy (CRITICAL)
+
+**each Claude Code instance must work in a separate git worktree** to avoid staging area conflicts.
+
+worktree structure:
 
 ```
-main (protected branch)
-  ├── feature/backend-*   (Claude Code A)
-  ├── feature/frontend-*  (Claude Code B)
-  └── feature/infra-*     (Claude Code C)
+typescript-aws-dashboard/          # main (PdM)
+├── worktree-backend/             # backend lead (work/backend)
+├── worktree-frontend/            # frontend lead (work/frontend)
+└── worktree-devops/              # devops lead (work/devops)
 ```
 
-### branch naming conventions
+### worktree setup (one time)
 
-- backend: `feature/backend-<task-description>`
-- frontend: `feature/frontend-<task-description>`
-- infrastructure: `feature/infra-<task-description>`
-- bug fixes: `fix/<component>-<bug-description>`
+```bash
+# run from main directory
+./scripts/setup-worktrees.sh
 
-### work flow
+# or manually:
+git worktree add -b work/backend worktree-backend main
+git worktree add -b work/frontend worktree-frontend main
+git worktree add -b work/devops worktree-devops main
+```
 
-1. create new feature branch from main
-2. implement changes
-3. commit (when instructed by user)
-4. create PR
-5. merge after review
+see [worktree.md](./worktree.md) for detailed guide.
+
+### daily workflow
+
+1. **work in your worktree**:
+   ```bash
+   cd worktree-backend  # or worktree-frontend, worktree-devops
+   ```
+
+2. **sync with main**:
+   ```bash
+   git fetch origin
+   git rebase origin/main
+   ```
+
+3. **make changes** in your responsibility area
+
+4. **commit** (when instructed):
+   ```bash
+   git add <your-files>
+   git commit -m "message"
+   ```
+
+5. **push your work branch**:
+   ```bash
+   git push -u origin work/backend
+   ```
+
+6. **integrate to main** (create PR or merge directly)
 
 ### commit rules
 

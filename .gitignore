@@ -1,3 +1,6 @@
 /result
 /target
 /.env
+/worktree-backend/
+/worktree-frontend/
+/worktree-devops/
