@@ -2,6 +2,8 @@
 
 this document describes the overall architecture of the typescript-aws-dashboard project.
 
+see [requirements.md](./requirements.md) for detailed project requirements and scope.
+
 ## System Overview
 
 this is a **multi-tenant application** where multiple organizations can use the same system with isolated data.
