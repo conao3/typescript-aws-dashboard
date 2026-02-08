@@ -8,17 +8,17 @@ setup: ## setup project
 
 .PHONY: build
 build: ## build project
-	nix develop -c cargo build
+	nix develop -c cargo build --manifest-path backend/Cargo.toml
 	nix develop -c pnpm build
 
 .PHONY: build-release
 build-release: ## build project in release mode
-	nix develop -c cargo build --release
+	nix develop -c cargo build --release --manifest-path backend/Cargo.toml
 	nix develop -c pnpm build
 
 .PHONY: test
 test: ## run tests
-	nix develop -c cargo test
+	nix develop -c cargo test --manifest-path backend/Cargo.toml
 	nix develop -c pnpm test
 
 .PHONY: fmt
@@ -27,7 +27,7 @@ fmt: ## format code
 
 .PHONY: lint
 lint: ## lint code
-	nix develop -c cargo clippy
+	nix develop -c cargo clippy --manifest-path backend/Cargo.toml
 	nix develop -c pnpm lint
 
 .PHONY: check
@@ -36,10 +36,14 @@ check: ## check code
 
 .PHONY: clean
 clean: ## clean build artifacts
-	nix develop -c cargo clean
+	nix develop -c cargo clean --manifest-path backend/Cargo.toml
 	rm -rf node_modules
 	rm -rf dist
 
 .PHONY: dev
 dev: ## start development server
 	nix develop -c pnpm dev
+
+.PHONY: dev-backend
+dev-backend: ## start backend server
+	nix develop -c cargo run --manifest-path backend/Cargo.toml
