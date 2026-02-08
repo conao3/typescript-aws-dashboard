@@ -2,6 +2,7 @@
   "name": "frontend",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@10.28.0",
   "scripts": {
     "dev": "vite dev --port 17232",
     "build": "vite build",
