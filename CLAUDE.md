@@ -12,6 +12,7 @@ key documents:
 - [docs/tasks.md](./docs/tasks.md) - current task tracking and assignments
 - [docs/architecture.md](./docs/architecture.md) - system architecture and multi-tenancy design
 - [docs/multi-tenancy.md](./docs/multi-tenancy.md) - multi-tenancy implementation guide
+- [docs/database.md](./docs/database.md) - database setup and sqldef schema management
 - [docs/development.md](./docs/development.md) - development workflow
 - [docs/api.md](./docs/api.md) - GraphQL API specification
 

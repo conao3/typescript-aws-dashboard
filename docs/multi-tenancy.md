@@ -11,10 +11,20 @@ this application uses **row-level isolation** for multi-tenancy:
 
 ## Database Design
 
+### schema management with sqldef
+
+this project uses [sqldef](https://github.com/sqldef/sqldef) for database schema management.
+
+sqldef is a declarative schema management tool:
+- define desired schema in `schema.sql`
+- sqldef calculates diff and applies changes
+- idempotent and safe migrations
+- use `psqldef` command for PostgreSQL
+
 ### tenants table
 
 ```sql
-create table tenants (
+create table dashboard.tenants (
   id uuid primary key default gen_random_uuid(),
   name text not null,
   slug text not null unique,
@@ -34,9 +44,9 @@ all tables that contain tenant-specific data must:
 example:
 
 ```sql
-create table users (
+create table dashboard.users (
   id uuid primary key default gen_random_uuid(),
-  tenant_id uuid not null references tenants(id) on delete cascade,
+  tenant_id uuid not null references dashboard.tenants(id) on delete cascade,
   email text not null,
   name text not null,
   password_hash text not null,
@@ -44,8 +54,8 @@ create table users (
   updated_at timestamptz not null default now()
 );
 
-create index idx_users_tenant on users(tenant_id);
-create unique index idx_users_tenant_email on users(tenant_id, email);
+create index idx_users_tenant on dashboard.users(tenant_id);
+create unique index idx_users_tenant_email on dashboard.users(tenant_id, email);
 ```
 
 ## Authentication Flow
@@ -205,23 +215,90 @@ admin endpoints should:
 - not require tenant_id in JWT
 - explicitly handle tenant selection
 
-## Database Migrations
+## Database Migrations with sqldef
 
-### migration structure
+### schema file location
 
 ```
-migrations/
-  20260208000001_create_tenants.sql
-  20260208000002_create_users.sql
-  20260208000003_add_tenant_to_resources.sql
+backend/schema.sql
 ```
 
-### migration guidelines
+this file contains the complete desired schema state.
+
+### applying migrations
+
+```bash
+# dry run (show what would be changed)
+psqldef -U dashboard -h localhost dashboard --file=backend/schema.sql --dry-run
+
+# apply changes
+psqldef -U dashboard -h localhost dashboard --file=backend/schema.sql
+```
+
+### schema guidelines
 
 1. always add `tenant_id` to new tables
 2. create indexes on `tenant_id`
 3. add foreign key constraints
-4. include test data for development
+4. use `dashboard` schema for all tables
+5. include constraints and defaults
+
+### example schema.sql structure
+
+```sql
+-- create schema
+create schema if not exists dashboard;
+
+-- tenants table
+create table dashboard.tenants (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  slug text not null unique,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  is_active boolean not null default true
+);
+
+-- users table with tenant isolation
+create table dashboard.users (
+  id uuid primary key default gen_random_uuid(),
+  tenant_id uuid not null references dashboard.tenants(id) on delete cascade,
+  email text not null,
+  name text not null,
+  password_hash text not null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index idx_users_tenant on dashboard.users(tenant_id);
+create unique index idx_users_tenant_email on dashboard.users(tenant_id, email);
+```
+
+### workflow
+
+1. edit `backend/schema.sql` with desired schema changes
+2. run `psqldef` with `--dry-run` to preview changes
+3. review the diff carefully
+4. apply changes by running `psqldef` without `--dry-run`
+5. test the changes
+
+### test data
+
+for development, create a separate `backend/seed.sql` file:
+
+```sql
+-- test tenants
+insert into dashboard.tenants (id, name, slug) values
+  ('00000000-0000-0000-0000-000000000001', 'Test Tenant 1', 'test1'),
+  ('00000000-0000-0000-0000-000000000002', 'Test Tenant 2', 'test2')
+on conflict do nothing;
+```
+
+apply seed data:
+
+```bash
+psql -U dashboard -h localhost dashboard < backend/seed.sql
+```
 
 ## Error Handling
 

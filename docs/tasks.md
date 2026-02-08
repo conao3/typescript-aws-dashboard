@@ -19,21 +19,21 @@ this document tracks current tasks for the typescript-aws-dashboard project.
 - **dependencies**: none
 - **notes**:
 
-### 🔴 implement database migration system
+### 🔴 setup sqldef for schema management
 
 - **assigned to**: backend lead
 - **priority**: high
-- **description**: set up migration system (e.g., sqlx migrations or diesel migrations)
+- **description**: install psqldef and create initial schema.sql file structure
 - **dependencies**: database connection
-- **notes**:
+- **notes**: use sqldef for declarative schema management
 
 ### 🔴 create initial schema with multi-tenancy
 
 - **assigned to**: backend lead
 - **priority**: high
-- **description**: create tenants table and initial schema with tenant_id columns
-- **dependencies**: migration system
-- **notes**:
+- **description**: create backend/schema.sql with tenants table and initial schema with tenant_id columns
+- **dependencies**: sqldef setup
+- **notes**: define complete schema in schema.sql, apply with psqldef
 
 ### 🔴 implement JWT authentication
 

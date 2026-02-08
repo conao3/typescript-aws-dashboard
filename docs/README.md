@@ -43,6 +43,12 @@ this directory contains documentation for the typescript-aws-dashboard project.
   - authentication flow
   - security best practices
 
+- **[database.md](./database.md)** - database setup and management
+  - PostgreSQL configuration
+  - sqldef schema management
+  - migration workflow
+  - common operations
+
 ## How to Read the Documentation
 
 ### for new project members
