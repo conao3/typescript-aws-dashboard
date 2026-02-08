@@ -5,9 +5,9 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "vinxi dev",
+    "dev": "PORT=17232 vinxi dev",
     "build": "vinxi build",
-    "start": "vinxi start",
+    "start": "PORT=17232 vinxi start",
     "lint": "tsc --noEmit",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

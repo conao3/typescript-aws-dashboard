@@ -5,6 +5,10 @@ import { createApp } from 'vinxi'
 export default createApp({
   server: {
     preset: 'node',
+    port: 17232,
+    experimental: {
+      asyncContext: true,
+    },
   },
   routers: [
     {

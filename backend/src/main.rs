@@ -34,7 +34,7 @@ async fn main() -> std::io::Result<()> {
 
     let schema = Schema::build(QueryRoot, EmptyMutation, EmptySubscription).finish();
 
-    log::info!("GraphiQL IDE: http://localhost:8080");
+    log::info!("GraphiQL IDE: http://localhost:17231");
 
     HttpServer::new(move || {
         App::new()
@@ -43,7 +43,7 @@ async fn main() -> std::io::Result<()> {
             .service(web::resource("/graphql").guard(guard::Post()).to(graphql))
             .service(web::resource("/").guard(guard::Get()).to(graphiql))
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind(("127.0.0.1", 17231))?
     .run()
     .await
 }
