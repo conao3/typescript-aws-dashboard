@@ -1,15 +1,10 @@
 import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
-import { ApolloProvider } from "@apollo/client";
 
-import Header from "../components/Header";
 import { AuthProvider } from "../lib/auth";
-import { createApolloClient } from "../lib/apollo";
 
 import appCss from "../styles.css?url";
-
-const apolloClient = createApolloClient();
 
 export const Route = createRootRoute({
   head: () => ({
@@ -43,23 +38,20 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <ApolloProvider client={apolloClient}>
-          <AuthProvider>
-            <Header />
-            {children}
-            <TanStackDevtools
-              config={{
-                position: "bottom-right",
-              }}
-              plugins={[
-                {
-                  name: "Tanstack Router",
-                  render: <TanStackRouterDevtoolsPanel />,
-                },
-              ]}
-            />
-          </AuthProvider>
-        </ApolloProvider>
+        <AuthProvider>
+          {children}
+          <TanStackDevtools
+            config={{
+              position: "bottom-right",
+            }}
+            plugins={[
+              {
+                name: "Tanstack Router",
+                render: <TanStackRouterDevtoolsPanel />,
+              },
+            ]}
+          />
+        </AuthProvider>
         <Scripts />
       </body>
     </html>
