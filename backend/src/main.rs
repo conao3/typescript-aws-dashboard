@@ -74,6 +74,92 @@ impl MutationRoot {
 
         Ok(token)
     }
+
+    async fn logout(&self) -> bool {
+        true
+    }
+
+    async fn register_tenant(
+        &self,
+        ctx: &Context<'_>,
+        input: models::RegisterTenantInput,
+    ) -> async_graphql::Result<models::Tenant> {
+        let pool = ctx.data::<sqlx::PgPool>()?;
+
+        let existing_tenant = sqlx::query_as::<_, models::Tenant>(
+            "SELECT * FROM dashboard.tenants WHERE slug = $1",
+        )
+        .bind(&input.slug)
+        .fetch_optional(pool)
+        .await?;
+
+        if existing_tenant.is_some() {
+            return Err(async_graphql::Error::new("slug already exists"));
+        }
+
+        let mut tx = pool.begin().await?;
+
+        let tenant = sqlx::query_as::<_, models::Tenant>(
+            "INSERT INTO dashboard.tenants (name, slug) VALUES ($1, $2) RETURNING *",
+        )
+        .bind(&input.name)
+        .bind(&input.slug)
+        .fetch_one(&mut *tx)
+        .await?;
+
+        let password_hash = auth::hash_password(&input.admin_password)?;
+
+        sqlx::query(
+            "INSERT INTO dashboard.users (tenant_id, email, name, password_hash) VALUES ($1, $2, $3, $4)",
+        )
+        .bind(tenant.id)
+        .bind(&input.admin_email)
+        .bind(&input.admin_name)
+        .bind(&password_hash)
+        .execute(&mut *tx)
+        .await?;
+
+        tx.commit().await?;
+
+        Ok(tenant)
+    }
+
+    async fn create_user(
+        &self,
+        ctx: &Context<'_>,
+        input: models::CreateUserInput,
+    ) -> async_graphql::Result<models::User> {
+        let tenant_ctx = ctx
+            .data::<middleware::TenantContext>()
+            .map_err(|_| async_graphql::Error::new("unauthorized"))?;
+        let pool = ctx.data::<sqlx::PgPool>()?;
+
+        let existing_user = sqlx::query_as::<_, models::User>(
+            "SELECT * FROM dashboard.users WHERE tenant_id = $1 AND email = $2",
+        )
+        .bind(tenant_ctx.tenant_id)
+        .bind(&input.email)
+        .fetch_optional(pool)
+        .await?;
+
+        if existing_user.is_some() {
+            return Err(async_graphql::Error::new("email already exists"));
+        }
+
+        let password_hash = auth::hash_password(&input.password)?;
+
+        let user = sqlx::query_as::<_, models::User>(
+            "INSERT INTO dashboard.users (tenant_id, email, name, password_hash) VALUES ($1, $2, $3, $4) RETURNING *",
+        )
+        .bind(tenant_ctx.tenant_id)
+        .bind(&input.email)
+        .bind(&input.name)
+        .bind(&password_hash)
+        .fetch_one(pool)
+        .await?;
+
+        Ok(user)
+    }
 }
 
 type AppSchema = Schema<QueryRoot, MutationRoot, EmptySubscription>;

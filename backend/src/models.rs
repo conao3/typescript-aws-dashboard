@@ -1,4 +1,4 @@
-use async_graphql::SimpleObject;
+use async_graphql::{InputObject, SimpleObject};
 use chrono::{DateTime, Utc};
 use sqlx::FromRow;
 use uuid::Uuid;
@@ -15,7 +15,7 @@ pub struct User {
     pub updated_at: DateTime<Utc>,
 }
 
-#[derive(Debug, FromRow)]
+#[derive(Debug, FromRow, SimpleObject)]
 pub struct Tenant {
     pub id: Uuid,
     pub name: String,
@@ -23,4 +23,26 @@ pub struct Tenant {
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
     pub is_active: bool,
+}
+
+#[derive(InputObject)]
+pub struct RegisterTenantInput {
+    pub name: String,
+    pub slug: String,
+    pub admin_email: String,
+    pub admin_name: String,
+    pub admin_password: String,
+}
+
+#[derive(InputObject)]
+pub struct CreateUserInput {
+    pub email: String,
+    pub name: String,
+    pub password: String,
+}
+
+#[derive(SimpleObject)]
+pub struct AuthPayload {
+    pub token: String,
+    pub user: User,
 }

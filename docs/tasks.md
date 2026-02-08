@@ -11,14 +11,6 @@ this document tracks current tasks for the typescript-aws-dashboard project.
 
 ## Backend Tasks
 
-### 🔴 setup initial GraphQL schema
-
-- **assigned to**: backend lead
-- **priority**: high
-- **description**: define basic GraphQL schema with tenant-aware queries and mutations
-- **dependencies**: tenant context middleware
-- **notes**:
-
 ### 🔴 implement AWS credentials management
 
 - **assigned to**: backend lead
@@ -136,6 +128,22 @@ this document tracks current tasks for the typescript-aws-dashboard project.
 - **notes**:
 
 ## Completed Tasks
+
+### 🟢 setup initial GraphQL schema (2026-02-08)
+
+- **assigned to**: backend lead
+- **priority**: high
+- **description**: define basic GraphQL schema with tenant-aware queries and mutations
+- **implementation**:
+  - added registerTenant mutation to create new tenants with admin user
+  - added createUser mutation for tenant-aware user creation
+  - added logout mutation (returns true, token invalidation handled client-side)
+  - exposed Tenant model as SimpleObject in GraphQL schema
+  - added Input types: RegisterTenantInput, CreateUserInput
+  - implemented transaction for tenant + admin user creation
+  - updated docs/api.md with complete GraphQL schema documentation
+  - added usage examples for all mutations and queries
+  - documented authentication flow with JWT token in Authorization header
 
 ### 🟢 setup CI/CD pipeline (2026-02-08)
 

@@ -13,7 +13,9 @@ this document defines the GraphQL API specification.
 
 ```graphql
 type Query {
-  # TODO: define queries
+  hello: String!
+  version: String!
+  currentUser: User!
 }
 ```
 
@@ -21,19 +23,66 @@ type Query {
 
 ```graphql
 type Mutation {
-  # TODO: define mutations
+  login(email: String!, password: String!): String!
+  logout: Boolean!
+  registerTenant(input: RegisterTenantInput!): Tenant!
+  createUser(input: CreateUserInput!): User!
 }
 ```
 
 ### Types
 
 ```graphql
-# TODO: type definitions
+type User {
+  id: ID!
+  tenantId: ID!
+  email: String!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Tenant {
+  id: ID!
+  name: String!
+  slug: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  isActive: Boolean!
+}
+
+input RegisterTenantInput {
+  name: String!
+  slug: String!
+  adminEmail: String!
+  adminName: String!
+  adminPassword: String!
+}
+
+input CreateUserInput {
+  email: String!
+  name: String!
+  password: String!
+}
+
+scalar DateTime
 ```
 
 ## Authentication
 
-(to be implemented)
+all authenticated requests must include a JWT token in the Authorization header:
+
+```
+Authorization: Bearer <token>
+```
+
+the token is obtained via the `login` mutation and contains:
+- user_id (sub)
+- tenant_id
+- email
+- expiration (24 hours)
+
+the middleware automatically extracts the tenant context from the token and makes it available to all GraphQL resolvers.
 
 ## Error Handling
 
@@ -54,16 +103,77 @@ uses standard GraphQL error responses.
 
 ## Usage Examples
 
-### query example
+### register tenant
 
 ```graphql
-# TODO: add after implementation
+mutation {
+  registerTenant(input: {
+    name: "My Organization"
+    slug: "my-org"
+    adminEmail: "admin@example.com"
+    adminName: "Admin User"
+    adminPassword: "securepassword"
+  }) {
+    id
+    name
+    slug
+    isActive
+  }
+}
 ```
 
-### mutation example
+### login
 
 ```graphql
-# TODO: add after implementation
+mutation {
+  login(email: "admin@example.com", password: "securepassword")
+}
+```
+
+response:
+```json
+{
+  "data": {
+    "login": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+}
+```
+
+### get current user
+
+```graphql
+query {
+  currentUser {
+    id
+    email
+    name
+    tenantId
+  }
+}
+```
+
+### create user (requires authentication)
+
+```graphql
+mutation {
+  createUser(input: {
+    email: "user@example.com"
+    name: "New User"
+    password: "password"
+  }) {
+    id
+    email
+    name
+  }
+}
+```
+
+### logout
+
+```graphql
+mutation {
+  logout
+}
 ```
 
 ## Versioning
