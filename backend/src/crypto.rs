@@ -5,6 +5,7 @@ use aes_gcm::{
 use base64::{engine::general_purpose, Engine as _};
 use rand::RngCore;
 
+#[derive(Clone)]
 pub struct CryptoConfig {
     key: Vec<u8>,
 }

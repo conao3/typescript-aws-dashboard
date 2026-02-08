@@ -4,6 +4,7 @@ use async_graphql::{Context, EmptySubscription, Object, Schema, http::GraphiQLSo
 use async_graphql_actix_web::{GraphQLRequest, GraphQLResponse};
 
 mod auth;
+mod aws;
 mod crypto;
 mod db;
 mod middleware;
@@ -375,11 +376,13 @@ async fn main() -> std::io::Result<()> {
 
     let jwt_config = auth::JwtConfig::new();
     let crypto_config = crypto::CryptoConfig::new();
+    let aws_client_factory = aws::AwsClientFactory::new(crypto_config.clone());
 
     let schema = Schema::build(QueryRoot, MutationRoot, EmptySubscription)
         .data(pool.clone())
         .data(jwt_config)
         .data(crypto_config)
+        .data(aws_client_factory)
         .finish();
 
     log::info!("GraphiQL IDE: http://localhost:17231/admin/graphiql");

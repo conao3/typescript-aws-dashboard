@@ -11,14 +11,6 @@ this document tracks current tasks for the typescript-aws-dashboard project.
 
 ## Backend Tasks
 
-### 🔴 integrate AWS SDK for EC2
-
-- **assigned to**: backend lead
-- **priority**: high
-- **description**: integrate AWS SDK for Rust, implement EC2 client with tenant credentials
-- **dependencies**: AWS credentials management
-- **notes**: use tenant's AWS credentials to make API calls
-
 ### 🔴 implement EC2 AMI import task sync
 
 - **assigned to**: backend lead
@@ -131,6 +123,20 @@ this document tracks current tasks for the typescript-aws-dashboard project.
   - created `backend/docker-entrypoint.sh` to automate database schema application on container startup
   - backend container now automatically waits for postgres and applies schema before starting server
   - updated README.md to reflect automated schema migration (no manual steps needed)
+
+### 🟢 integrate AWS SDK for EC2 (2026-02-08)
+
+- **assigned to**: backend lead
+- **priority**: high
+- **description**: integrate AWS SDK for Rust, implement EC2 client with tenant credentials
+- **implementation**:
+  - added AWS SDK dependencies: aws-config 1.1, aws-sdk-ec2 1.109, aws-credential-types 1.1
+  - created `backend/src/aws.rs` with AwsClientFactory
+  - implemented create_ec2_client method to build EC2 client from encrypted credentials
+  - decrypts AWS access keys using CryptoConfig before creating client
+  - supports custom region configuration per credential
+  - integrated AwsClientFactory into GraphQL schema for use in resolvers
+  - added Clone trait to CryptoConfig to support factory pattern
 
 ### 🟢 implement AWS credentials management (2026-02-08)
 
