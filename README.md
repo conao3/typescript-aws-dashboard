@@ -108,21 +108,36 @@ build and start services:
 docker compose -f docker-compose.prod.yml up -d
 ```
 
-apply database schema:
-
-```bash
-docker compose -f docker-compose.prod.yml exec backend psqldef -U dashboard -h postgres dashboard --file=/app/schema.sql
-```
+the backend container automatically:
+1. waits for PostgreSQL to be ready
+2. applies database schema using psqldef
+3. starts the backend server
 
 services will be available at:
 
 - backend: http://localhost:17231
+- GraphiQL: http://localhost:17231/admin/graphiql
 - frontend: http://localhost:17232
+
+view logs:
+
+```bash
+docker compose -f docker-compose.prod.yml logs -f
+```
 
 stop services:
 
 ```bash
 docker compose -f docker-compose.prod.yml down
+```
+
+or use Makefile commands:
+
+```bash
+make docker-build    # build images
+make docker-up       # start services
+make docker-logs     # view logs
+make docker-down     # stop services
 ```
 
 ### environment variables
