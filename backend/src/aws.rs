@@ -1,6 +1,7 @@
 use aws_config::Region;
 use aws_credential_types::{provider::SharedCredentialsProvider, Credentials};
 use aws_sdk_ec2::Client as Ec2Client;
+use aws_sdk_ec2::types::ImportImageTask;
 
 pub struct AwsClientFactory {
     crypto_config: crate::crypto::CryptoConfig,
@@ -44,5 +45,24 @@ impl AwsClientFactory {
             .await;
 
         Ok(Ec2Client::new(&config))
+    }
+
+    pub async fn fetch_import_image_tasks(
+        &self,
+        access_key_id_encrypted: &str,
+        secret_access_key_encrypted: &str,
+        region: &str,
+    ) -> Result<Vec<ImportImageTask>, String> {
+        let client = self
+            .create_ec2_client(access_key_id_encrypted, secret_access_key_encrypted, region)
+            .await?;
+
+        let response = client
+            .describe_import_image_tasks()
+            .send()
+            .await
+            .map_err(|e| format!("failed to describe import image tasks: {}", e))?;
+
+        Ok(response.import_image_tasks().to_vec())
     }
 }

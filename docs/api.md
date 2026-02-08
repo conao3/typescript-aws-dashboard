@@ -32,6 +32,7 @@ type Mutation {
   createAwsCredential(input: CreateAwsCredentialInput!): AwsCredential!
   updateAwsCredential(id: ID!, input: UpdateAwsCredentialInput!): AwsCredential!
   deleteAwsCredential(id: ID!): Boolean!
+  syncImportImageTasks(awsCredentialId: ID!): [Ec2AmiImportTask!]!
 }
 ```
 
@@ -91,7 +92,28 @@ input UpdateAwsCredentialInput {
   region: String
 }
 
+type Ec2AmiImportTask {
+  id: ID!
+  tenantId: ID!
+  awsCredentialId: ID!
+  importTaskId: String!
+  status: String!
+  statusMessage: String
+  imageId: String
+  architecture: String
+  description: String
+  hypervisor: String
+  licenseType: String
+  platform: String
+  progress: String
+  snapshotDetails: JSON
+  tags: JSON
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 scalar DateTime
+scalar JSON
 ```
 
 ## Authentication
@@ -276,6 +298,27 @@ mutation {
   deleteAwsCredential(id: "uuid-here")
 }
 ```
+
+### sync EC2 AMI import tasks (requires authentication)
+
+```graphql
+mutation {
+  syncImportImageTasks(awsCredentialId: "uuid-here") {
+    id
+    importTaskId
+    status
+    statusMessage
+    imageId
+    architecture
+    platform
+    progress
+    createdAt
+    updatedAt
+  }
+}
+```
+
+fetches all AMI import tasks from AWS API using the specified credential and stores them in the database. returns the list of synced tasks. existing tasks are updated (upsert).
 
 ## Versioning
 

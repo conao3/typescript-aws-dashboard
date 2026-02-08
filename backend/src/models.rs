@@ -82,3 +82,24 @@ pub struct UpdateAwsCredentialInput {
     pub name: Option<String>,
     pub region: Option<String>,
 }
+
+#[derive(Debug, FromRow, SimpleObject)]
+pub struct Ec2AmiImportTask {
+    pub id: Uuid,
+    pub tenant_id: Uuid,
+    pub aws_credential_id: Uuid,
+    pub import_task_id: String,
+    pub status: String,
+    pub status_message: Option<String>,
+    pub image_id: Option<String>,
+    pub architecture: Option<String>,
+    pub description: Option<String>,
+    pub hypervisor: Option<String>,
+    pub license_type: Option<String>,
+    pub platform: Option<String>,
+    pub progress: Option<String>,
+    pub snapshot_details: Option<serde_json::Value>,
+    pub tags: Option<serde_json::Value>,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
+}

@@ -324,6 +324,141 @@ impl MutationRoot {
 
         Ok(result.rows_affected() > 0)
     }
+
+    async fn sync_import_image_tasks(
+        &self,
+        ctx: &Context<'_>,
+        aws_credential_id: uuid::Uuid,
+    ) -> async_graphql::Result<Vec<models::Ec2AmiImportTask>> {
+        let tenant_ctx = ctx
+            .data::<middleware::TenantContext>()
+            .map_err(|_| async_graphql::Error::new("unauthorized"))?;
+        let pool = ctx.data::<sqlx::PgPool>()?;
+        let aws_client_factory = ctx.data::<aws::AwsClientFactory>()?;
+
+        let credential = sqlx::query_as::<_, models::AwsCredentialRow>(
+            "SELECT * FROM dashboard.aws_credentials WHERE id = $1 AND tenant_id = $2",
+        )
+        .bind(aws_credential_id)
+        .bind(tenant_ctx.tenant_id)
+        .fetch_optional(pool)
+        .await?
+        .ok_or_else(|| async_graphql::Error::new("credential not found"))?;
+
+        let import_tasks = aws_client_factory
+            .fetch_import_image_tasks(
+                &credential.access_key_id_encrypted,
+                &credential.secret_access_key_encrypted,
+                &credential.region,
+            )
+            .await
+            .map_err(|e| async_graphql::Error::new(format!("AWS API error: {}", e)))?;
+
+        let mut saved_tasks = Vec::new();
+
+        for task in import_tasks {
+            let import_task_id = task.import_task_id().unwrap_or("");
+            let status = task.status().unwrap_or("");
+            let status_message = task.status_message().map(|s| s.to_string());
+            let image_id = task.image_id().map(|s| s.to_string());
+            let architecture = task.architecture().map(|s| s.to_string());
+            let description = task.description().map(|s| s.to_string());
+            let hypervisor = task.hypervisor().map(|s| s.to_string());
+            let license_type = task.license_type().map(|s| s.to_string());
+            let platform = task.platform().map(|s| s.to_string());
+            let progress = task.progress().map(|s| s.to_string());
+
+            let snapshot_details = if !task.snapshot_details().is_empty() {
+                let details: Vec<serde_json::Value> = task
+                    .snapshot_details()
+                    .iter()
+                    .map(|detail| {
+                        serde_json::json!({
+                            "description": detail.description(),
+                            "device_name": detail.device_name(),
+                            "disk_image_size": detail.disk_image_size(),
+                            "format": detail.format(),
+                            "progress": detail.progress(),
+                            "snapshot_id": detail.snapshot_id(),
+                            "status": detail.status(),
+                            "status_message": detail.status_message(),
+                            "url": detail.url(),
+                            "user_bucket": detail.user_bucket().map(|b| {
+                                serde_json::json!({
+                                    "s3_bucket": b.s3_bucket(),
+                                    "s3_key": b.s3_key(),
+                                })
+                            }),
+                        })
+                    })
+                    .collect();
+                Some(serde_json::Value::Array(details))
+            } else {
+                None
+            };
+
+            let tags = if !task.tags().is_empty() {
+                let tag_list: Vec<serde_json::Value> = task
+                    .tags()
+                    .iter()
+                    .map(|tag| {
+                        serde_json::json!({
+                            "key": tag.key(),
+                            "value": tag.value(),
+                        })
+                    })
+                    .collect();
+                Some(serde_json::Value::Array(tag_list))
+            } else {
+                None
+            };
+
+            let saved_task = sqlx::query_as::<_, models::Ec2AmiImportTask>(
+                r#"
+                INSERT INTO dashboard.ec2_ami_import_tasks
+                (tenant_id, aws_credential_id, import_task_id, status, status_message,
+                 image_id, architecture, description, hypervisor, license_type,
+                 platform, progress, snapshot_details, tags)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+                ON CONFLICT (tenant_id, import_task_id)
+                DO UPDATE SET
+                    status = EXCLUDED.status,
+                    status_message = EXCLUDED.status_message,
+                    image_id = EXCLUDED.image_id,
+                    architecture = EXCLUDED.architecture,
+                    description = EXCLUDED.description,
+                    hypervisor = EXCLUDED.hypervisor,
+                    license_type = EXCLUDED.license_type,
+                    platform = EXCLUDED.platform,
+                    progress = EXCLUDED.progress,
+                    snapshot_details = EXCLUDED.snapshot_details,
+                    tags = EXCLUDED.tags,
+                    updated_at = now()
+                RETURNING *
+                "#,
+            )
+            .bind(tenant_ctx.tenant_id)
+            .bind(aws_credential_id)
+            .bind(import_task_id)
+            .bind(status)
+            .bind(status_message)
+            .bind(image_id)
+            .bind(architecture)
+            .bind(description)
+            .bind(hypervisor)
+            .bind(license_type)
+            .bind(platform)
+            .bind(progress)
+            .bind(snapshot_details)
+            .bind(tags)
+            .fetch_one(pool)
+            .await?;
+
+            saved_tasks.push(saved_task);
+        }
+
+        Ok(saved_tasks)
+    }
 }
 
 type AppSchema = Schema<QueryRoot, MutationRoot, EmptySubscription>;

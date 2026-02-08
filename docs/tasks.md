@@ -11,14 +11,6 @@ this document tracks current tasks for the typescript-aws-dashboard project.
 
 ## Backend Tasks
 
-### 🔴 implement EC2 AMI import task sync
-
-- **assigned to**: backend lead
-- **priority**: high
-- **description**: implement sync functionality to fetch AMI import tasks from AWS API
-- **dependencies**: AWS SDK integration
-- **notes**: use DescribeImportImageTasks API
-
 ### 🔴 implement EC2 GraphQL schema
 
 - **assigned to**: backend lead
@@ -137,6 +129,23 @@ this document tracks current tasks for the typescript-aws-dashboard project.
   - supports custom region configuration per credential
   - integrated AwsClientFactory into GraphQL schema for use in resolvers
   - added Clone trait to CryptoConfig to support factory pattern
+
+### 🟢 implement EC2 AMI import task sync (2026-02-08)
+
+- **assigned to**: backend lead
+- **priority**: high
+- **description**: implement sync functionality to fetch AMI import tasks from AWS API
+- **implementation**:
+  - added fetch_import_image_tasks method to AwsClientFactory in `backend/src/aws.rs`
+  - calls AWS EC2 DescribeImportImageTasks API using tenant credentials
+  - added Ec2AmiImportTask model to `backend/src/models.rs`
+  - implemented syncImportImageTasks GraphQL mutation in `backend/src/main.rs`
+  - mutation fetches tasks from AWS and stores them in database with upsert logic
+  - converts AWS SDK types to JSON for snapshot_details and tags fields
+  - implements tenant isolation: only syncs tasks for authenticated tenant
+  - uses ON CONFLICT to update existing tasks or insert new ones
+  - returns list of synced tasks with all details
+  - updated docs/api.md with Ec2AmiImportTask type and syncImportImageTasks mutation
 
 ### 🟢 implement AWS credentials management (2026-02-08)
 
