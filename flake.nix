@@ -47,6 +47,7 @@
               gnumake
               rustc
               cargo
+              cargo-watch
               rust-analyzer
               rustfmt
               clippy

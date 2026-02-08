@@ -47,3 +47,7 @@ dev: ## start frontend development server
 .PHONY: dev-backend
 dev-backend: ## start backend server
 	nix develop -c cargo run --manifest-path backend/Cargo.toml
+
+.PHONY: watch
+watch: ## watch and restart backend server on changes
+	nix develop -c cargo watch -x 'run --manifest-path backend/Cargo.toml'
