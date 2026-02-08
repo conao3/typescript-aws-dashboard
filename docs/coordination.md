@@ -31,38 +31,25 @@ this document provides guidelines for multiple Claude Code instances to collabor
 
 ## Task Management
 
-### using vibe_kanban
+### communication with PdM
 
-project tasks are managed with vibe_kanban.
+- tasks and priorities are communicated directly by PdM
+- ask PdM when clarification or decisions are needed
+- report progress and blockers to PdM regularly
+- propose task breakdowns for complex features
 
-```bash
-# list projects
-list_projects
-
-# list tasks
-list_tasks project_id=<project-id>
-
-# create task
-create_task project_id=<project-id> title="..." description="..."
-
-# update task
-update_task task_id=<task-id> status=inprogress
-```
-
-### task statuses
-
-- `todo`: not started
-- `inprogress`: in progress
-- `inreview`: awaiting review
-- `done`: completed
-- `cancelled`: cancelled
-
-### how to select tasks
+### work selection
 
 1. choose tasks corresponding to your role
-2. choose tasks without dependencies or with resolved dependencies
-3. always update status to `inprogress` when starting work
-4. update status to `done` when completed
+2. verify no other Claude Code instance is working on the same task
+3. communicate with PdM when starting work
+4. report completion to PdM
+
+### avoiding duplicate work
+
+- announce your work to PdM before starting
+- check with PdM if unsure whether a task is already assigned
+- communicate regularly about progress
 
 ## Git Workflow
 
@@ -121,8 +108,8 @@ when there are important changes or new findings, update relevant documentation:
 ### avoiding file editing conflicts
 
 - do not edit the same file simultaneously with multiple Claude Code instances
-- check task status in vibe_kanban before starting work
-- verify tasks when duplicate work is suspected
+- communicate with PdM before starting work
+- verify no duplicate work through PdM
 
 ### interface contracts
 
@@ -131,6 +118,7 @@ boundary between backend and frontend:
 - treat GraphQL API schema as a contract
 - recognize that schema changes affect both sides
 - update `api.md` when schema changes
+- notify both leads when schema changes
 
 ## Communication
 
@@ -139,12 +127,13 @@ boundary between backend and frontend:
 - ask PdM when clarification or decisions are needed
 - PdM determines task priorities
 - propose major design changes to PdM
+- report blockers early
 
 ### regular synchronization
 
-- check progress of all Claude Code instances before important milestones
+- check progress with PdM before important milestones
 - pay special attention to interdependent tasks
-- report blockers early
+- communicate about dependencies between backend and frontend
 
 ## Best Practices
 
@@ -155,3 +144,4 @@ boundary between backend and frontend:
 5. **update documentation**
 6. **ask when unclear**
 7. **consider impact of changes**
+8. **communicate with PdM regularly**
