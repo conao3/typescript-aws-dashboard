@@ -135,6 +135,7 @@ Authorization: Bearer <token>
 ```
 
 the token is obtained via the `login` mutation and contains:
+
 - user_id (sub)
 - tenant_id
 - email
@@ -165,13 +166,15 @@ uses standard GraphQL error responses.
 
 ```graphql
 mutation {
-  registerTenant(input: {
-    name: "My Organization"
-    slug: "my-org"
-    adminEmail: "admin@example.com"
-    adminName: "Admin User"
-    adminPassword: "securepassword"
-  }) {
+  registerTenant(
+    input: {
+      name: "My Organization"
+      slug: "my-org"
+      adminEmail: "admin@example.com"
+      adminName: "Admin User"
+      adminPassword: "securepassword"
+    }
+  ) {
     id
     name
     slug
@@ -189,6 +192,7 @@ mutation {
 ```
 
 response:
+
 ```json
 {
   "data": {
@@ -214,11 +218,9 @@ query {
 
 ```graphql
 mutation {
-  createUser(input: {
-    email: "user@example.com"
-    name: "New User"
-    password: "password"
-  }) {
+  createUser(
+    input: { email: "user@example.com", name: "New User", password: "password" }
+  ) {
     id
     email
     name
@@ -238,12 +240,14 @@ mutation {
 
 ```graphql
 mutation {
-  createAwsCredential(input: {
-    name: "Production Account"
-    accessKeyId: "AKIAIOSFODNN7EXAMPLE"
-    secretAccessKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-    region: "us-east-1"
-  }) {
+  createAwsCredential(
+    input: {
+      name: "Production Account"
+      accessKeyId: "AKIAIOSFODNN7EXAMPLE"
+      secretAccessKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+      region: "us-east-1"
+    }
+  ) {
     id
     name
     region
@@ -288,10 +292,7 @@ query {
 mutation {
   updateAwsCredential(
     id: "uuid-here"
-    input: {
-      name: "Production Account (Updated)"
-      region: "ap-northeast-1"
-    }
+    input: { name: "Production Account (Updated)", region: "ap-northeast-1" }
   ) {
     id
     name
@@ -353,12 +354,14 @@ with filtering and pagination:
 
 ```graphql
 query {
-  ec2AmiImportTasks(filter: {
-    awsCredentialId: "uuid-here"
-    status: "completed"
-    limit: 20
-    offset: 0
-  }) {
+  ec2AmiImportTasks(
+    filter: {
+      awsCredentialId: "uuid-here"
+      status: "completed"
+      limit: 20
+      offset: 0
+    }
+  ) {
     id
     importTaskId
     status

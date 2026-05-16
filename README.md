@@ -109,6 +109,7 @@ docker compose -f docker-compose.prod.yml up -d
 ```
 
 the backend container automatically:
+
 1. waits for PostgreSQL to be ready
 2. applies database schema using psqldef
 3. starts the backend server

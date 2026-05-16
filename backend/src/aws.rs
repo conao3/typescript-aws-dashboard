@@ -1,5 +1,5 @@
 use aws_config::Region;
-use aws_credential_types::{provider::SharedCredentialsProvider, Credentials};
+use aws_credential_types::{Credentials, provider::SharedCredentialsProvider};
 use aws_sdk_ec2::Client as Ec2Client;
 use aws_sdk_ec2::types::ImportImageTask;
 
@@ -28,13 +28,8 @@ impl AwsClientFactory {
             .decrypt(secret_access_key_encrypted)
             .map_err(|e| format!("failed to decrypt secret key: {}", e))?;
 
-        let credentials = Credentials::new(
-            access_key_id,
-            secret_access_key,
-            None,
-            None,
-            "dashboard",
-        );
+        let credentials =
+            Credentials::new(access_key_id, secret_access_key, None, None, "dashboard");
 
         let credentials_provider = SharedCredentialsProvider::new(credentials);
 

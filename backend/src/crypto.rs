@@ -1,8 +1,8 @@
 use aes_gcm::{
-    aead::{Aead, KeyInit, OsRng},
     Aes256Gcm, Nonce,
+    aead::{Aead, KeyInit, OsRng},
 };
-use base64::{engine::general_purpose, Engine as _};
+use base64::{Engine as _, engine::general_purpose};
 use rand::RngCore;
 
 #[derive(Clone)]
@@ -12,10 +12,9 @@ pub struct CryptoConfig {
 
 impl CryptoConfig {
     pub fn new() -> Self {
-        let key = std::env::var("ENCRYPTION_KEY")
-            .unwrap_or_else(|_| {
-                "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef".to_string()
-            });
+        let key = std::env::var("ENCRYPTION_KEY").unwrap_or_else(|_| {
+            "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef".to_string()
+        });
 
         let key_bytes = hex::decode(&key).unwrap_or_else(|_| key.as_bytes().to_vec());
 

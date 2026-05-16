@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import {
-  getToken,
   removeToken,
   saveToken,
   getTokenPayload,
