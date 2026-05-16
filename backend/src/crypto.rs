@@ -1,9 +1,8 @@
 use aes_gcm::{
     Aes256Gcm, Nonce,
-    aead::{Aead, KeyInit, OsRng},
+    aead::{Aead, KeyInit, OsRng, rand_core::RngCore},
 };
 use base64::{Engine as _, engine::general_purpose};
-use rand::RngCore;
 
 #[derive(Clone)]
 pub struct CryptoConfig {
