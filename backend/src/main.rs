@@ -23,12 +23,13 @@ impl QueryRoot {
     }
 
     async fn current_user(&self, ctx: &Context<'_>) -> async_graphql::Result<models::User> {
-        let tenant_ctx = ctx.data::<middleware::TenantContext>()
+        let tenant_ctx = ctx
+            .data::<middleware::TenantContext>()
             .map_err(|_| async_graphql::Error::new("unauthorized"))?;
         let pool = ctx.data::<sqlx::PgPool>()?;
 
         let user = sqlx::query_as::<_, models::User>(
-            "SELECT * FROM dashboard.users WHERE id = $1 AND tenant_id = $2"
+            "SELECT * FROM dashboard.users WHERE id = $1 AND tenant_id = $2",
         )
         .bind(tenant_ctx.user_id)
         .bind(tenant_ctx.tenant_id)
@@ -118,9 +119,8 @@ impl QueryRoot {
         let limit = filter.limit.unwrap_or(100).min(1000);
         let offset = filter.offset.unwrap_or(0);
 
-        let mut query = String::from(
-            "SELECT * FROM dashboard.ec2_ami_import_tasks WHERE tenant_id = $1",
-        );
+        let mut query =
+            String::from("SELECT * FROM dashboard.ec2_ami_import_tasks WHERE tenant_id = $1");
         let mut bind_count = 1;
 
         if filter.aws_credential_id.is_some() {
@@ -139,10 +139,14 @@ impl QueryRoot {
         }
 
         query.push_str(" ORDER BY created_at DESC");
-        query.push_str(&format!(" LIMIT ${} OFFSET ${}", bind_count + 1, bind_count + 2));
+        query.push_str(&format!(
+            " LIMIT ${} OFFSET ${}",
+            bind_count + 1,
+            bind_count + 2
+        ));
 
-        let mut sqlx_query = sqlx::query_as::<_, models::Ec2AmiImportTask>(&query)
-            .bind(tenant_ctx.tenant_id);
+        let mut sqlx_query =
+            sqlx::query_as::<_, models::Ec2AmiImportTask>(&query).bind(tenant_ctx.tenant_id);
 
         if let Some(credential_id) = filter.aws_credential_id {
             sqlx_query = sqlx_query.bind(credential_id);
@@ -234,12 +238,11 @@ impl MutationRoot {
     ) -> async_graphql::Result<models::Tenant> {
         let pool = ctx.data::<sqlx::PgPool>()?;
 
-        let existing_tenant = sqlx::query_as::<_, models::Tenant>(
-            "SELECT * FROM dashboard.tenants WHERE slug = $1",
-        )
-        .bind(&input.slug)
-        .fetch_optional(pool)
-        .await?;
+        let existing_tenant =
+            sqlx::query_as::<_, models::Tenant>("SELECT * FROM dashboard.tenants WHERE slug = $1")
+                .bind(&input.slug)
+                .fetch_optional(pool)
+                .await?;
 
         if existing_tenant.is_some() {
             return Err(async_graphql::Error::new("slug already exists"));
@@ -402,13 +405,12 @@ impl MutationRoot {
             .map_err(|_| async_graphql::Error::new("unauthorized"))?;
         let pool = ctx.data::<sqlx::PgPool>()?;
 
-        let result = sqlx::query(
-            "DELETE FROM dashboard.aws_credentials WHERE id = $1 AND tenant_id = $2",
-        )
-        .bind(id)
-        .bind(tenant_ctx.tenant_id)
-        .execute(pool)
-        .await?;
+        let result =
+            sqlx::query("DELETE FROM dashboard.aws_credentials WHERE id = $1 AND tenant_id = $2")
+                .bind(id)
+                .bind(tenant_ctx.tenant_id)
+                .execute(pool)
+                .await?;
 
         Ok(result.rows_affected() > 0)
     }
