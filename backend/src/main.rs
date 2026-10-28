@@ -146,7 +146,8 @@ impl QueryRoot {
         ));
 
         let mut sqlx_query =
-            sqlx::query_as::<_, models::Ec2AmiImportTask>(&query).bind(tenant_ctx.tenant_id);
+            sqlx::query_as::<_, models::Ec2AmiImportTask>(sqlx::AssertSqlSafe(query))
+                .bind(tenant_ctx.tenant_id);
 
         if let Some(credential_id) = filter.aws_credential_id {
             sqlx_query = sqlx_query.bind(credential_id);

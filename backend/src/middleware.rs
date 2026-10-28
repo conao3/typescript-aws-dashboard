@@ -1,4 +1,4 @@
-use actix_web::{HttpMessage, HttpRequest, dev::ServiceRequest};
+use actix_web::{HttpRequest, dev::ServiceRequest};
 use uuid::Uuid;
 
 #[derive(Debug, Clone)]

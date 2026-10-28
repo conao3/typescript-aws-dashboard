@@ -1,6 +1,6 @@
 use aes_gcm::{
     Aes256Gcm, Nonce,
-    aead::{Aead, KeyInit, OsRng, rand_core::RngCore},
+    aead::{Aead, Generate, KeyInit},
 };
 use base64::{Engine as _, engine::general_purpose};
 
@@ -27,15 +27,13 @@ impl CryptoConfig {
     pub fn encrypt(&self, plaintext: &str) -> Result<String, String> {
         let cipher = Aes256Gcm::new_from_slice(&self.key).map_err(|e| e.to_string())?;
 
-        let mut nonce_bytes = [0u8; 12];
-        OsRng.fill_bytes(&mut nonce_bytes);
-        let nonce = Nonce::from_slice(&nonce_bytes);
+        let nonce = Nonce::generate();
 
         let ciphertext = cipher
-            .encrypt(nonce, plaintext.as_bytes())
+            .encrypt(&nonce, plaintext.as_bytes())
             .map_err(|e| e.to_string())?;
 
-        let mut result = nonce_bytes.to_vec();
+        let mut result = nonce.to_vec();
         result.extend_from_slice(&ciphertext);
 
         Ok(general_purpose::STANDARD.encode(&result))
