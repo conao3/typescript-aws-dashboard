@@ -27,15 +27,9 @@
           ...
         }:
         let
-          overlay =
-            final: prev:
-            let
-              nodejs = prev.nodejs_22;
-              pnpm = prev.pnpm_10.override { inherit nodejs; };
-            in
-            {
-              inherit nodejs pnpm;
-            };
+          overlay = final: prev: {
+            nodejs = prev.nodejs_latest;
+          };
           pkgs = import inputs.nixpkgs {
             inherit system;
             overlays = [ overlay ];

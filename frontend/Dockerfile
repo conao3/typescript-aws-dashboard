@@ -1,4 +1,4 @@
-FROM node:22-slim AS builder
+FROM node:26-slim AS builder
 
 RUN corepack enable pnpm
 
@@ -11,7 +11,7 @@ COPY . .
 
 RUN pnpm build
 
-FROM node:22-slim
+FROM node:26-slim
 
 RUN corepack enable pnpm
 
