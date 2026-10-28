@@ -1,2 +1,6 @@
+overrides:
+  seroval: ^1.7.2
+  rollup: ^4.65.1
+  esbuild: ^0.28.2
 onlyBuiltDependencies:
   - esbuild
