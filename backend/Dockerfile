@@ -1,4 +1,4 @@
-FROM rust:1.83 AS builder
+FROM rust:1.99 AS builder
 
 WORKDIR /app
 
@@ -11,7 +11,7 @@ FROM debian:bookworm-slim
 
 RUN apt-get update && \
     apt-get install -y ca-certificates libssl3 libpq5 postgresql-client wget && \
-    wget -O /tmp/psqldef.tar.gz https://github.com/sqldef/sqldef/releases/download/v0.17.24/psqldef_linux_amd64.tar.gz && \
+    wget -O /tmp/psqldef.tar.gz https://github.com/sqldef/sqldef/releases/download/v3.11.28/psqldef_linux_amd64.tar.gz && \
     tar -xzf /tmp/psqldef.tar.gz -C /usr/local/bin && \
     chmod +x /usr/local/bin/psqldef && \
     rm /tmp/psqldef.tar.gz && \
