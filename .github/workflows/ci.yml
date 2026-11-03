@@ -24,10 +24,10 @@ jobs:
         ports:
           - 5432:5432
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.0.1
 
       - name: install nix
-        uses: cachix/install-nix-action@v31
+        uses: cachix/install-nix-action@v31.11.3
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
