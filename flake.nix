@@ -22,18 +22,11 @@
       perSystem =
         {
           pkgs,
-          system,
-          config,
           ...
         }:
         let
-          overlay = final: prev: {
-            nodejs = prev.nodejs_latest;
-          };
-          pkgs = import inputs.nixpkgs {
-            inherit system;
-            overlays = [ overlay ];
-          };
+          nodejs = pkgs.nodejs_26;
+          pnpm = pkgs.pnpm.override { nodejs-slim = pkgs.nodejs-slim_26; };
         in
         {
           devShells.default = pkgs.mkShell {
