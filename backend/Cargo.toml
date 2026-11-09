@@ -22,5 +22,5 @@ aes-gcm = "0.11"
 base64 = "0.23"
 hex = "0.4"
 aws-config = "1.13"
-aws-sdk-ec2 = { version = "1.272", default-features = false, features = ["behavior-version-latest", "default-https-client", "rt-tokio"] }
+aws-sdk-ec2 = { version = "1.275", default-features = false, features = ["behavior-version-latest", "default-https-client", "rt-tokio"] }
 aws-credential-types = "1.3"
