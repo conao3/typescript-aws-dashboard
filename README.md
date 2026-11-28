@@ -43,6 +43,16 @@ make dev
 
 Frontend: http://localhost:17232
 
+screenshots (taken with dummy data):
+
+sign in:
+
+<img src="images/login.png" width="840" alt="sign in screen with email address and password fields">
+
+dashboard:
+
+<img src="images/dashboard.png" width="840" alt="dashboard with a navigation sidebar and cards for total users, active sessions and API calls">
+
 ### Database Commands
 
 ```bash
