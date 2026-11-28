@@ -1,4 +1,12 @@
-# typescript-aws-dashboard
+<p align="center"><img src="docs/assets/banner.png" alt="typescript-aws-dashboard: A multi-tenant dashboard for AWS features missing from the AWS Console" width="880"></p>
+
+<p align="center"><strong>A multi-tenant dashboard for AWS features missing from the AWS Console</strong></p>
+
+<p align="center"><a href="https://github.com/conao3/typescript-aws-dashboard/actions/workflows/ci.yml"><img src="https://github.com/conao3/typescript-aws-dashboard/actions/workflows/ci.yml/badge.svg?branch=master" alt="CI"></a> <a href="LICENSE"><img src="https://img.shields.io/github/license/conao3/typescript-aws-dashboard" alt="License"></a> <a href="https://github.com/conao3/typescript-aws-dashboard/stargazers"><img src="https://img.shields.io/github/stars/conao3/typescript-aws-dashboard?style=flat" alt="GitHub stars"></a></p>
+
+<p align="center"><a href="#setup">Setup</a> | <a href="#development">Development</a> | <a href="#deployment">Deployment</a> | <a href="#documentation">Documentation</a></p>
+
+<h1>typescript-aws-dashboard</h1>
 
 a multi-tenant SaaS dashboard providing AWS management features missing from the AWS Console.
 
